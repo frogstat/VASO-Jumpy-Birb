@@ -1,2 +1,2 @@
-# VASO---Jumpy-Birb
+# VASO-Jumpy-Birb
 Gruppprojekt
