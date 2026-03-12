@@ -21,9 +21,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.random.RandomGenerator;
 
-/**
- * {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms.
- */
 public class Main implements ApplicationListener {
 
 
