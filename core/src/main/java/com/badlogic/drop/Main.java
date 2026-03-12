@@ -22,7 +22,10 @@ import java.nio.file.Path;
 import java.util.random.RandomGenerator;
 
 public class Main implements ApplicationListener {
-
+    public final static int MENU = 0;
+    public final static int OPTIONS = 1;
+    public final static int GAMEPLAY = 2;
+    public final static int GAMEOVER = 3;
 
     @Override
     public void create() {
@@ -70,11 +73,12 @@ public class Main implements ApplicationListener {
         // Destroy application's resources here.
     }
 
-    private String getTheme() {
-        try (var reader = Files.newBufferedReader(Path.of("theme.txt"))) {
-            return reader.readLine();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+    public void changeScreen(int screen){
+        switch(screen){
+            case MENU -> System.out.println(MENU);
+            case OPTIONS ->System.out.println(OPTIONS);
+            case GAMEPLAY ->System.out.println(GAMEPLAY);
+            case GAMEOVER ->System.out.println(GAMEOVER);
         }
     }
 }
