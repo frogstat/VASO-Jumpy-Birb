@@ -54,10 +54,7 @@ public class PreferencesScreen implements Screen {
         for (int i = 0; i < themeFolders.size(); i++) {
             String currentFolder = themeFolders.get(i);
 
-            String theme = currentFolder.split("theme_",0)[1];
-            String themeFinalName = theme.substring(0,1).toUpperCase() + theme.substring(1);
-
-            result[i] = themeFinalName;
+            result[i] = currentFolder;
         }
 
         return result;
@@ -84,7 +81,9 @@ public class PreferencesScreen implements Screen {
             }
         }
 
-        themeLabel = new Label(themes[themeIndex], skin);
+
+
+        themeLabel = new Label(getDisplayName(themes[themeIndex]), skin);
 
         Slider musicSlider = new Slider(0f, 1f, 0.01f, false, skin);
         musicSlider.setValue(musicVolume);
@@ -134,8 +133,8 @@ public class PreferencesScreen implements Screen {
                 }
 
                 theme = themes[themeIndex];
-                themeLabel.setText(theme);
-                theme = "theme_" + theme.toLowerCase();
+                themeLabel.setText(getDisplayName(themes[themeIndex]));
+                theme = theme.toLowerCase();
             }
         });
 
@@ -164,6 +163,12 @@ public class PreferencesScreen implements Screen {
         table.add(returnButton).padTop(30);
 
         stage.addActor(table);
+    }
+
+    public String getDisplayName(String name){
+        String displayLabel = name.split("theme_",0)[1];
+        displayLabel = displayLabel.substring(0,1).toUpperCase() + displayLabel.substring(1);
+        return displayLabel;
     }
 
     @Override
