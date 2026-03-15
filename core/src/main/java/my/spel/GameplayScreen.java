@@ -114,7 +114,6 @@ public class GameplayScreen implements Screen {
 
         }
 
-
         if(pauseTimer > 0){
             pauseTimer -= delta;
         }

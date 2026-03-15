@@ -192,7 +192,7 @@ public class PreferencesScreen implements Screen {
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             dispose();
-            GameplayScreen.pauseTimer = 1f;
+            GameplayScreen.pauseTimer = 0.5f;
             parent.continueGame();
         }
     }
