@@ -3,6 +3,7 @@ package my.spel;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 
 /**
  * {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms.
@@ -100,6 +101,10 @@ public class Main extends Game {
 
     public void stopMusic() {
         music.stop();
+    }
+
+    public void playSound(Sound sound){
+        sound.play(PreferencesScreen.audioVolume);
     }
 
 

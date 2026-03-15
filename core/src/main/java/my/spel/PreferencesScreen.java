@@ -29,7 +29,7 @@ public class PreferencesScreen implements Screen {
 
     public static String theme = "theme_bird";
     public static float musicVolume = 0.5f;
-    public static float audioVolume = 0.5f;
+    public static float audioVolume = 1f;
 
     public PreferencesScreen(Main parent) {
         this.parent = parent;
@@ -129,6 +129,12 @@ public class PreferencesScreen implements Screen {
                 }
 
                 theme = themes[themeIndex];
+                if(Main.previousScreen.equals(Main.ScreenTypes.GAMEPLAY)) {
+                    parent.music.stop();
+                    parent.music = Gdx.audio.newMusic(Gdx.files.internal(theme + "/music.mp3"));
+                    parent.music.setVolume(musicVolume);
+                    parent.music.play();
+                }
                 themeLabel.setText(getDisplayName(themes[themeIndex]));
                 theme = theme.toLowerCase();
             }

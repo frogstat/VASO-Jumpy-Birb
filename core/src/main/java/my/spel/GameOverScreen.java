@@ -33,8 +33,7 @@ public class GameOverScreen implements Screen {
         this.parent = parent;
 
         gameOverTexture = new Texture("game_over.png");
-        gameOverSound = Gdx.audio.newSound(Gdx.files.internal("game_over_sound.mp3"));
-        gameOverSound.play();
+        parent.playSound(Gdx.audio.newSound(Gdx.files.internal("game_over_sound.mp3")));
         spriteBatch = new SpriteBatch();
         viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         buttonTimer = 2.5f;

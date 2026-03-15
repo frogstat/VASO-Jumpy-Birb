@@ -95,9 +95,7 @@ public class GameplayScreen implements Screen {
             playerTexture = new Texture(theme + "/player.png");
             playerTextureStill = new Texture(theme + "/player_still.png");
 
-            parent.music.stop();
-            parent.music = Gdx.audio.newMusic(Gdx.files.internal(theme + "/music.mp3"));
-            parent.music.play();
+
         }
     }
 
