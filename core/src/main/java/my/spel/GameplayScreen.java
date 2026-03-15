@@ -1,10 +1,8 @@
 package my.spel;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -23,6 +21,8 @@ public class GameplayScreen implements Screen {
 
     public static int highScore = 0;
     public int scoreThisRound;
+    private final float scrollSpeed;
+    private float backgroundScrollAmount;
 
     private final float gravityConstant;
     private float playerSpeedY;
@@ -68,23 +68,18 @@ public class GameplayScreen implements Screen {
         startingPlatform = new Sprite(new Texture("player_hitbox.png"));
         startingPlatform.setY(playerSprite.getY() - 3);
         startingPlatform.setX(playerSprite.getX() - (playerSprite.getWidth() / 8));
-        startingPlatform.setSize(playerSprite.getWidth(),3);
+        startingPlatform.setSize(playerSprite.getWidth(), 3);
 
         playerHitBox = new Rectangle();
         playerHitBoxTexture = new Texture("player_hitbox.png");
         playerIsDead = false;
         initialPause = true;
         obstacles = new ArrayList<>();
-        timeToCreateNewObstacle = 2f;
+        timeToCreateNewObstacle = 0f;
+        scrollSpeed = 20f;
+        backgroundScrollAmount = 0;
 
-
-
-        playerHitBox.set(
-            playerSprite.getX() + playerSprite.getWidth() / 4f,
-            playerSprite.getY() + playerSprite.getHeight() / 4f,
-            playerSprite.getWidth() / 2f,
-            playerSprite.getHeight() / 2f
-        );
+        createPlayerHitbox();
     }
 
     public void createNewObstacle() {
@@ -126,7 +121,7 @@ public class GameplayScreen implements Screen {
             logic(delta);
         }
 
-        draw();
+        draw(delta);
 
         if (pauseTimer > 0) {
             pauseTimer -= delta;
@@ -190,57 +185,28 @@ public class GameplayScreen implements Screen {
     }
 
     private void logic(float delta) {
-        startingPlatform.translateX(-20 * delta);
+        moveBackground(delta);
+        moveStartingPlatform(delta);
+        createPlayerHitbox();
 
-        playerHitBox.set(
-            playerSprite.getX() + playerSprite.getWidth() / 4f,
-            playerSprite.getY() + playerSprite.getHeight() / 4f,
-            playerSprite.getWidth() / 2f,
-            playerSprite.getHeight() / 2f
-        );
-
-
-        timeToCreateNewObstacle -= delta;
-        if (timeToCreateNewObstacle < 0) {
-            timeToCreateNewObstacle = 5f;
+        if (enoughTimeHasPassedToCreateObstacle(delta)) {
             createNewObstacle();
         }
-
-        if(!playerIsDead){
-            for (Sprite obstacle : obstacles) {
-                Rectangle obstacleHitBox = new Rectangle();
-                obstacleHitBox.set(obstacle.getX(), obstacle.getY(), obstacle.getWidth(), obstacle.getHeight());
-                if (playerHitBox.overlaps(obstacleHitBox)) {
-                    parent.playSound(Gdx.audio.newSound(Gdx.files.internal(theme + "/death_sound.mp3")));
-                    playerIsDead = true;
-                }
-                obstacle.translateX(-20 * delta);
-            }
-        }
-
-        for (int i = obstacles.size() - 1; i >= 0 ; i--) {
-            if(obstacles.get(i).getX() < -30){
-                System.out.println("Removed out of bounds obstacle");
-                obstacles.remove(i);
-            }
-        }
-
-
-        playerSprite.translateY(playerSpeedY);
-        playerSpeedY += gravityConstant * delta;
-
-        playerSprite.setX(MathUtils.clamp(playerSprite.getX(), 0, viewport.getWorldWidth() - playerSprite.getWidth()));
-
         if (!playerIsDead) {
-            playerSprite.setY(MathUtils.clamp(playerSprite.getY(), 0, viewport.getWorldHeight() - playerSprite.getHeight()));
+            if (playerHasCollidedWithObstacle()) {
+                killPlayer();
+            }
         }
+
+        moveObstacle(delta);
+        movePlayerGravity(delta);
+        checkPlayerCollision();
 
         if (playerSprite.getY() == 0) {
-            playerIsDead = true;
-            parent.playSound(Gdx.audio.newSound(Gdx.files.internal(theme + "/death_sound.mp3")));
+            killPlayer();
         }
 
-        if (playerSprite.getY() < -200) {
+        if (isGameOver()) {
             Main.previousScreen = Main.ScreenTypes.GAMEPLAY;
             dispose();
             parent.stopMusic();
@@ -248,7 +214,81 @@ public class GameplayScreen implements Screen {
         }
     }
 
-    private void draw() {
+    private void checkPlayerCollision() {
+        playerSprite.setX(MathUtils.clamp(playerSprite.getX(), 0, viewport.getWorldWidth() - playerSprite.getWidth()));
+        if (!playerIsDead) {
+            playerSprite.setY(MathUtils.clamp(playerSprite.getY(), 0, viewport.getWorldHeight() - playerSprite.getHeight()));
+        }
+    }
+
+    private boolean enoughTimeHasPassedToCreateObstacle(float delta) {
+        timeToCreateNewObstacle -= delta;
+        if(timeToCreateNewObstacle < 0){
+            timeToCreateNewObstacle = 5;
+            return true;
+        }
+        return false;
+    }
+
+    private void killPlayer() {
+        playerIsDead = true;
+        parent.playSound(Gdx.audio.newSound(Gdx.files.internal(theme + "/death_sound.mp3")));
+    }
+
+    private boolean isGameOver() {
+        return playerSprite.getY() < -200;
+    }
+
+    private void movePlayerGravity(float delta) {
+        playerSprite.translateY(playerSpeedY);
+        playerSpeedY += gravityConstant * delta;
+    }
+
+    private void moveObstacle(float delta) {
+        for (int i = obstacles.size() - 1; i >= 0; i--) {
+
+            obstacles.get(i).translateX(-20 * delta);
+
+            if (obstacles.get(i).getX() < -30) {
+                System.out.println("Removed out of bounds obstacle");
+                obstacles.remove(i);
+            }
+        }
+    }
+
+    private boolean playerHasCollidedWithObstacle() {
+        for (Sprite obstacle : obstacles) {
+            Rectangle obstacleHitBox = new Rectangle();
+            obstacleHitBox.set(obstacle.getX(), obstacle.getY(), obstacle.getWidth(), obstacle.getHeight());
+
+            if (playerHitBox.overlaps(obstacleHitBox)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void createPlayerHitbox() {
+        playerHitBox.set(
+            playerSprite.getX() + playerSprite.getWidth() / 4f,
+            playerSprite.getY() + playerSprite.getHeight() / 4f,
+            playerSprite.getWidth() / 2f,
+            playerSprite.getHeight() / 2f
+        );
+    }
+
+    private void moveStartingPlatform(float delta) {
+        startingPlatform.translateX(-scrollSpeed * delta);
+    }
+
+    private void moveBackground(float delta) {
+        backgroundScrollAmount += (scrollSpeed / 2) * delta;
+        if (backgroundScrollAmount > viewport.getWorldWidth()) {
+            backgroundScrollAmount = 0;
+        }
+    }
+
+    private void draw(float delta) {
         if (playerSpeedY == 0) {
             playerSprite.setTexture(playerTextureStill);
         } else if (playerIsDead) {
@@ -264,7 +304,9 @@ public class GameplayScreen implements Screen {
         float worldWidth = viewport.getWorldWidth();
         float worldHeight = viewport.getWorldHeight();
 
-        spriteBatch.draw(backgroundTexture, 0, 0, worldWidth, worldHeight);
+        spriteBatch.draw(backgroundTexture, -backgroundScrollAmount, 0, worldWidth, worldHeight);
+        spriteBatch.draw(backgroundTexture, worldWidth - backgroundScrollAmount, 0, worldWidth, worldHeight);
+
         playerSprite.setRotation(MathUtils.clamp(playerSpeedY * 20, -90, 90));
 
         for (Sprite obstacle : obstacles) {
