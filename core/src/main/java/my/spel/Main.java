@@ -29,6 +29,7 @@ public class Main extends Game {
     @Override
     public void create() {
         music = Gdx.audio.newMusic(Gdx.files.internal("menu_music.mp3"));
+        music.setVolume(PreferencesScreen.musicVolume);
         playMusic();
         changeScreen(ScreenTypes.MAIN_MENU);
     }
