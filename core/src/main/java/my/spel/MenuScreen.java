@@ -35,7 +35,7 @@ public class MenuScreen implements Screen {
         skin = new Skin(Gdx.files.internal("skin/glassy-ui.json"));
 
         newGame = new TextButton("New Game", skin);
-        preferences = new TextButton("Preferences", skin);
+        preferences = new TextButton("Options", skin);
         exit = new TextButton("Exit", skin);
 
         table.add(newGame).fillX().uniformX();
