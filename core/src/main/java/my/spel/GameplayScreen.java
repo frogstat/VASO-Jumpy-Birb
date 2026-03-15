@@ -14,6 +14,9 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
+import java.util.*;
+import java.util.random.RandomGenerator;
+
 public class GameplayScreen implements Screen {
 
     Main parent;
@@ -40,6 +43,8 @@ public class GameplayScreen implements Screen {
 
     String theme;
 
+    List<Sprite> obstacles;
+    float timeToCreateNewObstacle;
 
     private boolean playerIsDead;
     private boolean initialPause;
@@ -62,6 +67,8 @@ public class GameplayScreen implements Screen {
         playerHitBoxTexture = new Texture("player_hitbox.png");
         playerIsDead = false;
         initialPause = true;
+        obstacles = new ArrayList<>();
+        timeToCreateNewObstacle = 2f;
 
         playerHitBox.set(
             playerSprite.getX() + playerSprite.getWidth() / 4f,
@@ -69,6 +76,28 @@ public class GameplayScreen implements Screen {
             playerSprite.getWidth() / 2f,
             playerSprite.getHeight() / 2f
         );
+    }
+
+    public void createNewObstacle() {
+        RandomGenerator random = RandomGenerator.getDefault();
+        float obstacleWidth = 20;
+        float obstacleHeight = random.nextFloat(20, viewport.getWorldHeight() - 50f);
+
+        Sprite obstacleSpriteBottom = new Sprite(new Texture("player_hitbox.png"));
+        Sprite obstacleSpriteTop = new Sprite(new Texture("player_hitbox.png"));
+        obstacleSpriteBottom.setSize(obstacleWidth, obstacleHeight);
+        obstacleSpriteTop.setSize(obstacleWidth, viewport.getWorldHeight());
+
+        obstacleSpriteBottom.setY(0);
+        obstacleSpriteTop.setY(obstacleSpriteBottom.getHeight() + 40f);
+
+        obstacleSpriteTop.setX(viewport.getWorldWidth() + 10);
+        obstacleSpriteBottom.setX(viewport.getWorldWidth() + 10);
+
+        System.out.println("Created obstacle");
+        obstacles.add(obstacleSpriteTop);
+        obstacles.add(obstacleSpriteBottom);
+
     }
 
     @Override
@@ -152,13 +181,39 @@ public class GameplayScreen implements Screen {
     }
 
     private void logic(float delta) {
-
         playerHitBox.set(
             playerSprite.getX() + playerSprite.getWidth() / 4f,
             playerSprite.getY() + playerSprite.getHeight() / 4f,
             playerSprite.getWidth() / 2f,
             playerSprite.getHeight() / 2f
         );
+
+
+        timeToCreateNewObstacle -= delta;
+        if (timeToCreateNewObstacle < 0) {
+            timeToCreateNewObstacle = 5f;
+            createNewObstacle();
+        }
+
+        if(!playerIsDead){
+            for (Sprite obstacle : obstacles) {
+                Rectangle obstacleHitBox = new Rectangle();
+                obstacleHitBox.set(obstacle.getX(), obstacle.getY(), obstacle.getWidth(), obstacle.getHeight());
+                if (playerHitBox.overlaps(obstacleHitBox)) {
+                    parent.playSound(Gdx.audio.newSound(Gdx.files.internal(theme + "/death_sound.mp3")));
+                    playerIsDead = true;
+                }
+                obstacle.translateX(-20 * delta);
+            }
+        }
+
+        for (int i = obstacles.size() - 1; i >= 0 ; i--) {
+            if(obstacles.get(i).getX() < -30){
+                System.out.println("Removed out of bounds obstacle");
+                obstacles.remove(i);
+            }
+        }
+
 
         playerSprite.translateY(playerSpeedY);
         playerSpeedY += gravityConstant * delta;
@@ -171,9 +226,10 @@ public class GameplayScreen implements Screen {
 
         if (playerSprite.getY() == 0) {
             playerIsDead = true;
+            parent.playSound(Gdx.audio.newSound(Gdx.files.internal(theme + "/death_sound.mp3")));
         }
 
-        if (playerSprite.getY() < -10) {
+        if (playerSprite.getY() < -200) {
             Main.previousScreen = Main.ScreenTypes.GAMEPLAY;
             dispose();
             parent.stopMusic();
@@ -200,10 +256,14 @@ public class GameplayScreen implements Screen {
         spriteBatch.draw(backgroundTexture, 0, 0, worldWidth, worldHeight);
         playerSprite.setRotation(MathUtils.clamp(playerSpeedY * 20, -90, 90));
 
+        for (Sprite obstacle : obstacles) {
+            obstacle.draw(spriteBatch);
+        }
         playerSprite.draw(spriteBatch);
 
+
         if (theme.equals("theme_simple")) {
-            spriteBatch.draw(playerHitBoxTexture, playerHitBox.getX(),playerHitBox.getY(),playerHitBox.getWidth(), playerHitBox.getHeight());
+            spriteBatch.draw(playerHitBoxTexture, playerHitBox.getX(), playerHitBox.getY(), playerHitBox.getWidth(), playerHitBox.getHeight());
         }
 
         spriteBatch.end();
