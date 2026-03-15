@@ -88,6 +88,11 @@ public class Main extends Game {
         changeScreen(ScreenTypes.MAIN_MENU);
     }
 
+    public void goToGameOver(){
+        gameOverScreen = new GameOverScreen(this);
+        changeScreen(ScreenTypes.GAME_OVER);
+    }
+
     public void playMusic() {
         music.setLooping(true);
         music.play();

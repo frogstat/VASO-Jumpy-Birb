@@ -38,6 +38,8 @@ public class GameplayScreen implements Screen {
 
     String theme;
 
+    private boolean playerIsDead;
+
     public static float pauseTimer = 0;
 
     public GameplayScreen(Main parent) {
@@ -53,6 +55,7 @@ public class GameplayScreen implements Screen {
         playerSprite.setY(viewport.getWorldHeight() / 2);
         playerSprite.setX(viewport.getWorldWidth() / 2 - (viewport.getWorldWidth() / 4));
         playerHitBox = new Rectangle();
+        playerIsDead = false;
     }
 
     @Override
@@ -63,10 +66,15 @@ public class GameplayScreen implements Screen {
     @Override
     public void render(float delta) {
         checkTheme(false);
-        if (pauseTimer == 0) {
+
+        if(!playerIsDead) {
             input(delta);
+        }
+
+        if (pauseTimer == 0) {
             logic(delta);
         }
+
         draw();
 
         if (pauseTimer > 0) {
@@ -116,10 +124,14 @@ public class GameplayScreen implements Screen {
         playerSprite.setX(MathUtils.clamp(playerSprite.getX(), 0, viewport.getWorldWidth() - playerSprite.getWidth()));
         playerSprite.setY(MathUtils.clamp(playerSprite.getY(), 0, viewport.getWorldHeight() - playerSprite.getHeight()));
 
-        if (playerSprite.getY() == 0) {
-            playerSpeedY = 0;
-        }
 
+
+        if (playerSprite.getY() == 0) {
+            Main.previousScreen = Main.ScreenTypes.GAMEPLAY;
+            dispose();
+            parent.stopMusic();
+            parent.goToGameOver();
+        }
     }
 
     private void draw() {
