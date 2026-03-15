@@ -62,11 +62,19 @@ public class GameplayScreen implements Screen {
 
     @Override
     public void render(float delta) {
-
         checkTheme(false);
-        input(delta);
-        logic(delta);
+        if (pauseTimer == 0) {
+            input(delta);
+            logic(delta);
+        }
         draw();
+
+        if (pauseTimer > 0) {
+            pauseTimer -= delta;
+        }
+        if (pauseTimer < 0) {
+            pauseTimer = 0;
+        }
     }
 
     private void checkTheme(boolean firstTime) {
@@ -94,32 +102,24 @@ public class GameplayScreen implements Screen {
     }
 
     private void logic(float delta) {
-        if(pauseTimer == 0) {
-            playerHitBox.set(
-                playerSprite.getX() + playerSprite.getWidth() / 4f,
-                playerSprite.getY() + playerSprite.getHeight() / 4f,
-                playerSprite.getWidth() / 2f,
-                playerSprite.getHeight() / 2f
-            );
 
-            playerSprite.translateY(playerSpeedY);
-            playerSpeedY += gravityConstant * delta;
+        playerHitBox.set(
+            playerSprite.getX() + playerSprite.getWidth() / 4f,
+            playerSprite.getY() + playerSprite.getHeight() / 4f,
+            playerSprite.getWidth() / 2f,
+            playerSprite.getHeight() / 2f
+        );
 
-            playerSprite.setX(MathUtils.clamp(playerSprite.getX(), 0, viewport.getWorldWidth() - playerSprite.getWidth()));
-            playerSprite.setY(MathUtils.clamp(playerSprite.getY(), 0, viewport.getWorldHeight() - playerSprite.getHeight()));
+        playerSprite.translateY(playerSpeedY);
+        playerSpeedY += gravityConstant * delta;
 
-            if (playerSprite.getY() == 0) {
-                playerSpeedY = 0;
-            }
+        playerSprite.setX(MathUtils.clamp(playerSprite.getX(), 0, viewport.getWorldWidth() - playerSprite.getWidth()));
+        playerSprite.setY(MathUtils.clamp(playerSprite.getY(), 0, viewport.getWorldHeight() - playerSprite.getHeight()));
 
+        if (playerSprite.getY() == 0) {
+            playerSpeedY = 0;
         }
 
-        if(pauseTimer > 0){
-            pauseTimer -= delta;
-        }
-        if (pauseTimer < 0){
-            pauseTimer = 0;
-        }
     }
 
     private void draw() {
@@ -168,4 +168,5 @@ public class GameplayScreen implements Screen {
     public void dispose() {
 
     }
+
 }
