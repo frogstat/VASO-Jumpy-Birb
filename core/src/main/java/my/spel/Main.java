@@ -1,16 +1,22 @@
 package my.spel;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 
-/** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
+/**
+ * {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms.
+ */
 public class Main extends Game {
 
-    public enum ScreenTypes{
+    public enum ScreenTypes {
         MAIN_MENU,
         PREFERENCES,
         GAMEPLAY,
         GAME_OVER
     }
+
+    public Music music;
 
     MenuScreen menuScreen;
     GameplayScreen gameplayScreen;
@@ -21,31 +27,33 @@ public class Main extends Game {
 
     @Override
     public void create() {
+        music = Gdx.audio.newMusic(Gdx.files.internal("menu_music.mp3"));
+        playMusic();
         changeScreen(ScreenTypes.MAIN_MENU);
     }
 
-    public void changeScreen(ScreenTypes screenType){
-        switch (screenType){
+    public void changeScreen(ScreenTypes screenType) {
+        switch (screenType) {
             case MAIN_MENU -> {
-                if(menuScreen == null){
+                if (menuScreen == null) {
                     menuScreen = new MenuScreen(this);
                 }
                 setScreen(menuScreen);
             }
             case GAMEPLAY -> {
-                if(gameplayScreen == null){
+                if (gameplayScreen == null) {
                     gameplayScreen = new GameplayScreen(this);
                 }
                 setScreen(gameplayScreen);
             }
             case GAME_OVER -> {
-                if(gameOverScreen == null){
+                if (gameOverScreen == null) {
                     gameOverScreen = new GameOverScreen(this);
                 }
                 setScreen(gameOverScreen);
             }
             case PREFERENCES -> {
-                if(preferencesScreen == null){
+                if (preferencesScreen == null) {
                     preferencesScreen = new PreferencesScreen(this);
                 }
                 setScreen(preferencesScreen);
@@ -53,12 +61,15 @@ public class Main extends Game {
         }
     }
 
-    public void newGame(){
+    public void newGame() {
         gameplayScreen = new GameplayScreen(this);
+        music.stop();
+        music = Gdx.audio.newMusic(Gdx.files.internal(gameplayScreen.theme + "/music.mp3"));
+        playMusic();
         changeScreen(ScreenTypes.GAMEPLAY);
     }
 
-    public void continueGame(){
+    public void continueGame() {
         changeScreen(ScreenTypes.GAMEPLAY);
     }
 
@@ -68,14 +79,23 @@ public class Main extends Game {
     }
 
     public void goToMenu() {
+        if (previousScreen.equals(ScreenTypes.GAMEPLAY)) {
+            stopMusic();
+            music = Gdx.audio.newMusic(Gdx.files.internal("menu_music.mp3"));
+            playMusic();
+        }
         menuScreen = new MenuScreen(this);
         changeScreen(ScreenTypes.MAIN_MENU);
     }
 
+    public void playMusic() {
+        music.setLooping(true);
+        music.play();
+    }
 
-
-
-
+    public void stopMusic() {
+        music.stop();
+    }
 
 
 }

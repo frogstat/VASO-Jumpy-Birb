@@ -97,9 +97,7 @@ public class PreferencesScreen implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 musicVolume = musicSlider.getValue();
-                if (parent.gameplayScreen != null) {
-                    parent.gameplayScreen.music.setVolume(PreferencesScreen.musicVolume);
-                }
+                parent.music.setVolume(musicVolume);
             }
         });
 
@@ -110,17 +108,15 @@ public class PreferencesScreen implements Screen {
             }
         });
 
-        TextButton returnButton = new TextButton("Return", skin);
 
-        returnButton.addListener(new ChangeListener() {
+
+        TextButton exitButton = new TextButton("Title Screen", skin);
+
+        exitButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 dispose();
-                if (Main.previousScreen.equals(Main.ScreenTypes.MAIN_MENU)) {
-                    parent.goToMenu();
-                } else {
-                    parent.continueGame();
-                }
+                parent.goToMenu();
             }
         });
 
@@ -162,8 +158,22 @@ public class PreferencesScreen implements Screen {
         table.row();
         table.add(audioSlider).width(300).pad(10);
 
+        if (Main.previousScreen.equals(Main.ScreenTypes.GAMEPLAY)) {
+            TextButton returnButton = new TextButton("Return", skin);
+
+            returnButton.addListener(new ChangeListener() {
+                @Override
+                public void changed(ChangeEvent event, Actor actor) {
+                    dispose();
+                    parent.continueGame();
+                }
+            });
+            table.row();
+            table.add(returnButton).padTop(30);
+        }
+
         table.row();
-        table.add(returnButton).padTop(30);
+        table.add(exitButton).padTop(30);
 
         stage.addActor(table);
     }

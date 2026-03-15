@@ -30,8 +30,6 @@ public class GameplayScreen implements Screen {
     Texture playerTexture;
     Texture playerTextureStill;
 
-    Music music;
-
     SpriteBatch spriteBatch;
 
     Sprite playerSprite;
@@ -43,8 +41,6 @@ public class GameplayScreen implements Screen {
     public GameplayScreen(Main parent) {
         this.parent = parent;
         theme = PreferencesScreen.theme;
-        music = Gdx.audio.newMusic(Gdx.files.internal(theme + "/music.mp3"));
-        music.setLooping(true);
         checkTheme(true);
         gravityConstant = -4f;
 
@@ -66,14 +62,9 @@ public class GameplayScreen implements Screen {
     public void render(float delta) {
 
         checkTheme(false);
-        checkSettings();
         input(delta);
         logic(delta);
         draw();
-    }
-
-    private void checkSettings() {
-        music.setVolume(PreferencesScreen.musicVolume);
     }
 
     private void checkTheme(boolean firstTime) {
@@ -82,12 +73,6 @@ public class GameplayScreen implements Screen {
             backgroundTexture = new Texture(theme + "/background.png");
             playerTexture = new Texture(theme + "/player.png");
             playerTextureStill = new Texture(theme + "/player_still.png");
-
-            if (music.isPlaying()) {
-                music.stop();
-            }
-            music = Gdx.audio.newMusic(Gdx.files.internal(theme + "/music.mp3"));
-            music.play();
         }
     }
 

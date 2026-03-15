@@ -23,12 +23,11 @@ public class MenuScreen implements Screen {
     public MenuScreen(Main parent) {
         this.parent = parent;
         stage = new Stage(new ScreenViewport());
-
-
     }
 
     @Override
     public void show() {
+
         Table table = new Table();
         table.setFillParent(true);
         stage.addActor(table);
@@ -68,6 +67,7 @@ public class MenuScreen implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 dispose();
+                parent.stopMusic();
                 parent.newGame();
             }
         });
