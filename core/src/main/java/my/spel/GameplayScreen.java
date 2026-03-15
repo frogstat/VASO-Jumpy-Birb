@@ -38,6 +38,7 @@ public class GameplayScreen implements Screen {
     SpriteBatch spriteBatch;
 
     Sprite playerSprite;
+    Sprite startingPlatform;
 
     Rectangle playerHitBox;
 
@@ -63,12 +64,20 @@ public class GameplayScreen implements Screen {
         playerSprite.setSize(15, 15);
         playerSprite.setY(viewport.getWorldHeight() / 2);
         playerSprite.setX(viewport.getWorldWidth() / 2 - (viewport.getWorldWidth() / 4));
+
+        startingPlatform = new Sprite(new Texture("player_hitbox.png"));
+        startingPlatform.setY(playerSprite.getY() - 3);
+        startingPlatform.setX(playerSprite.getX() - (playerSprite.getWidth() / 8));
+        startingPlatform.setSize(playerSprite.getWidth(),3);
+
         playerHitBox = new Rectangle();
         playerHitBoxTexture = new Texture("player_hitbox.png");
         playerIsDead = false;
         initialPause = true;
         obstacles = new ArrayList<>();
         timeToCreateNewObstacle = 2f;
+
+
 
         playerHitBox.set(
             playerSprite.getX() + playerSprite.getWidth() / 4f,
@@ -181,6 +190,8 @@ public class GameplayScreen implements Screen {
     }
 
     private void logic(float delta) {
+        startingPlatform.translateX(-20 * delta);
+
         playerHitBox.set(
             playerSprite.getX() + playerSprite.getWidth() / 4f,
             playerSprite.getY() + playerSprite.getHeight() / 4f,
@@ -260,6 +271,7 @@ public class GameplayScreen implements Screen {
             obstacle.draw(spriteBatch);
         }
         playerSprite.draw(spriteBatch);
+        startingPlatform.draw(spriteBatch);
 
 
         if (theme.equals("theme_simple")) {
