@@ -38,7 +38,9 @@ public class GameplayScreen implements Screen {
 
     String theme;
 
+
     private boolean playerIsDead;
+    private boolean initialPause;
 
     public static float pauseTimer = 0;
 
@@ -56,6 +58,7 @@ public class GameplayScreen implements Screen {
         playerSprite.setX(viewport.getWorldWidth() / 2 - (viewport.getWorldWidth() / 4));
         playerHitBox = new Rectangle();
         playerIsDead = false;
+        initialPause = true;
     }
 
     @Override
@@ -71,7 +74,7 @@ public class GameplayScreen implements Screen {
             input(delta);
         }
 
-        if (pauseTimer == 0) {
+        if (pauseTimer == 0 && !initialPause) {
             logic(delta);
         }
 
@@ -100,10 +103,12 @@ public class GameplayScreen implements Screen {
 
     private void input(float delta) {
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+            initialPause = false;
             playerSpeedY = 1f;
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+
             Main.previousScreen = Main.ScreenTypes.GAMEPLAY;
             parent.showPreferencesScreen();
         }
