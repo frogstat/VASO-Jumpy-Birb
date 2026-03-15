@@ -36,7 +36,7 @@ public class PreferencesScreen implements Screen {
         themes = getThemes();
     }
 
-    private String[] getThemes() {
+    public String[] getThemes() {
 
         List<String> themeFolders = new ArrayList<>();
         FileHandle assetsDir = Gdx.files.internal(".");

@@ -29,6 +29,8 @@ public class GameplayScreen implements Screen {
     Texture backgroundTexture;
     Texture playerTexture;
     Texture playerTextureStill;
+    Texture playerTextureDead;
+    Texture playerHitBoxTexture;
 
     SpriteBatch spriteBatch;
 
@@ -57,8 +59,16 @@ public class GameplayScreen implements Screen {
         playerSprite.setY(viewport.getWorldHeight() / 2);
         playerSprite.setX(viewport.getWorldWidth() / 2 - (viewport.getWorldWidth() / 4));
         playerHitBox = new Rectangle();
+        playerHitBoxTexture = new Texture("player_hitbox.png");
         playerIsDead = false;
         initialPause = true;
+
+        playerHitBox.set(
+            playerSprite.getX() + playerSprite.getWidth() / 4f,
+            playerSprite.getY() + playerSprite.getHeight() / 4f,
+            playerSprite.getWidth() / 2f,
+            playerSprite.getHeight() / 2f
+        );
     }
 
     @Override
@@ -70,7 +80,7 @@ public class GameplayScreen implements Screen {
     public void render(float delta) {
         checkTheme(false);
 
-        if(!playerIsDead) {
+        if (!playerIsDead) {
             input(delta);
         }
 
@@ -94,6 +104,7 @@ public class GameplayScreen implements Screen {
             backgroundTexture = new Texture(theme + "/background.png");
             playerTexture = new Texture(theme + "/player.png");
             playerTextureStill = new Texture(theme + "/player_still.png");
+            playerTextureDead = new Texture(theme + "/player_dead.png");
 
 
         }
@@ -110,6 +121,34 @@ public class GameplayScreen implements Screen {
             Main.previousScreen = Main.ScreenTypes.GAMEPLAY;
             parent.showPreferencesScreen();
         }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
+            int themeIndex = 0;
+            Main.previousScreen = Main.ScreenTypes.GAMEPLAY;
+            parent.preferencesScreen = new PreferencesScreen(parent);
+            String[] themes = parent.preferencesScreen.getThemes();
+            for (int i = 0; i < themes.length; i++) {
+                if (themes[i].equalsIgnoreCase(theme)) {
+                    themeIndex = i;
+                    break;
+                }
+            }
+
+            themeIndex++;
+
+            if (themeIndex >= themes.length) {
+                themeIndex = 0;
+            }
+
+            PreferencesScreen.theme = themes[themeIndex].toLowerCase();
+            if (Main.previousScreen.equals(Main.ScreenTypes.GAMEPLAY)) {
+                parent.music.stop();
+                parent.music = Gdx.audio.newMusic(Gdx.files.internal(PreferencesScreen.theme + "/music.mp3"));
+                parent.music.setVolume(PreferencesScreen.musicVolume);
+                parent.music.play();
+            }
+            System.out.println("Switching to " + PreferencesScreen.theme);
+        }
     }
 
     private void logic(float delta) {
@@ -125,11 +164,16 @@ public class GameplayScreen implements Screen {
         playerSpeedY += gravityConstant * delta;
 
         playerSprite.setX(MathUtils.clamp(playerSprite.getX(), 0, viewport.getWorldWidth() - playerSprite.getWidth()));
-        playerSprite.setY(MathUtils.clamp(playerSprite.getY(), 0, viewport.getWorldHeight() - playerSprite.getHeight()));
 
-
+        if (!playerIsDead) {
+            playerSprite.setY(MathUtils.clamp(playerSprite.getY(), 0, viewport.getWorldHeight() - playerSprite.getHeight()));
+        }
 
         if (playerSprite.getY() == 0) {
+            playerIsDead = true;
+        }
+
+        if (playerSprite.getY() < -10) {
             Main.previousScreen = Main.ScreenTypes.GAMEPLAY;
             dispose();
             parent.stopMusic();
@@ -140,10 +184,11 @@ public class GameplayScreen implements Screen {
     private void draw() {
         if (playerSpeedY == 0) {
             playerSprite.setTexture(playerTextureStill);
+        } else if (playerIsDead) {
+            playerSprite.setTexture(playerTextureDead);
         } else {
             playerSprite.setTexture(playerTexture);
         }
-
         ScreenUtils.clear(Color.BLACK);
         viewport.apply();
         spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
@@ -156,6 +201,11 @@ public class GameplayScreen implements Screen {
         playerSprite.setRotation(MathUtils.clamp(playerSpeedY * 20, -90, 90));
 
         playerSprite.draw(spriteBatch);
+
+        if (theme.equals("theme_simple")) {
+            spriteBatch.draw(playerHitBoxTexture, playerHitBox.getX(),playerHitBox.getY(),playerHitBox.getWidth(), playerHitBox.getHeight());
+        }
+
         spriteBatch.end();
     }
 
