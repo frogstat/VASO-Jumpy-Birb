@@ -38,6 +38,8 @@ public class GameplayScreen implements Screen {
 
     String theme;
 
+    public static float pauseTimer = 0;
+
     public GameplayScreen(Main parent) {
         this.parent = parent;
         theme = PreferencesScreen.theme;
@@ -73,6 +75,10 @@ public class GameplayScreen implements Screen {
             backgroundTexture = new Texture(theme + "/background.png");
             playerTexture = new Texture(theme + "/player.png");
             playerTextureStill = new Texture(theme + "/player_still.png");
+
+            parent.music.stop();
+            parent.music = Gdx.audio.newMusic(Gdx.files.internal(theme + "/music.mp3"));
+            parent.music.play();
         }
     }
 
@@ -88,32 +94,42 @@ public class GameplayScreen implements Screen {
     }
 
     private void logic(float delta) {
-        playerHitBox.set(
-            playerSprite.getX() + playerSprite.getWidth() / 4f,
-            playerSprite.getY() + playerSprite.getHeight() / 4f,
-            playerSprite.getWidth() / 2f,
-            playerSprite.getHeight() / 2f
-        );
+        if(pauseTimer == 0) {
+            playerHitBox.set(
+                playerSprite.getX() + playerSprite.getWidth() / 4f,
+                playerSprite.getY() + playerSprite.getHeight() / 4f,
+                playerSprite.getWidth() / 2f,
+                playerSprite.getHeight() / 2f
+            );
 
-        playerSprite.translateY(playerSpeedY);
-        playerSpeedY += gravityConstant * delta;
+            playerSprite.translateY(playerSpeedY);
+            playerSpeedY += gravityConstant * delta;
 
-        playerSprite.setX(MathUtils.clamp(playerSprite.getX(), 0, viewport.getWorldWidth() - playerSprite.getWidth()));
-        playerSprite.setY(MathUtils.clamp(playerSprite.getY(), 0, viewport.getWorldHeight() - playerSprite.getHeight()));
+            playerSprite.setX(MathUtils.clamp(playerSprite.getX(), 0, viewport.getWorldWidth() - playerSprite.getWidth()));
+            playerSprite.setY(MathUtils.clamp(playerSprite.getY(), 0, viewport.getWorldHeight() - playerSprite.getHeight()));
 
-        if (playerSprite.getY() == 0) {
-            playerSpeedY = 0;
+            if (playerSprite.getY() == 0) {
+                playerSpeedY = 0;
+            }
+
         }
 
+
+        if(pauseTimer > 0){
+            pauseTimer -= delta;
+        }
+        if (pauseTimer < 0){
+            pauseTimer = 0;
+        }
+    }
+
+    private void draw() {
         if (playerSpeedY == 0) {
             playerSprite.setTexture(playerTextureStill);
         } else {
             playerSprite.setTexture(playerTexture);
         }
 
-    }
-
-    private void draw() {
         ScreenUtils.clear(Color.BLACK);
         viewport.apply();
         spriteBatch.setProjectionMatrix(viewport.getCamera().combined);

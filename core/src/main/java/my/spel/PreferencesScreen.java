@@ -1,9 +1,6 @@
 package my.spel;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -165,6 +162,7 @@ public class PreferencesScreen implements Screen {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
                     dispose();
+                    GameplayScreen.pauseTimer = 1f;
                     parent.continueGame();
                 }
             });
@@ -191,6 +189,12 @@ public class PreferencesScreen implements Screen {
 
         stage.act(delta);
         stage.draw();
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            dispose();
+            GameplayScreen.pauseTimer = 1f;
+            parent.continueGame();
+        }
     }
 
     @Override
