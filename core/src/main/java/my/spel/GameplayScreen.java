@@ -46,12 +46,14 @@ public class GameplayScreen implements Screen {
         music = Gdx.audio.newMusic(Gdx.files.internal(theme + "/music.mp3"));
         music.setLooping(true);
         checkTheme(true);
-        gravityConstant = -9.81f;
+        gravityConstant = -4f;
 
         spriteBatch = new SpriteBatch();
         viewport = new FitViewport(150, 100);
         playerSprite = new Sprite(playerTexture);
         playerSprite.setSize(15, 15);
+        playerSprite.setY(viewport.getWorldHeight() / 2);
+        playerSprite.setX(viewport.getWorldWidth() / 2 - (viewport.getWorldWidth() / 4));
         playerHitBox = new Rectangle();
     }
 
@@ -62,7 +64,7 @@ public class GameplayScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        // organize code into three methods
+
         checkTheme(false);
         checkSettings();
         input(delta);
@@ -72,7 +74,6 @@ public class GameplayScreen implements Screen {
 
     private void checkSettings() {
         music.setVolume(PreferencesScreen.musicVolume);
-
     }
 
     private void checkTheme(boolean firstTime) {
@@ -92,7 +93,7 @@ public class GameplayScreen implements Screen {
 
     private void input(float delta) {
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-            playerSpeedY = 0.5f;
+            playerSpeedY = 1f;
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
@@ -109,8 +110,8 @@ public class GameplayScreen implements Screen {
             playerSprite.getHeight() / 2f
         );
 
-        playerSpeedY = gravityConstant * delta;
         playerSprite.translateY(playerSpeedY);
+        playerSpeedY += gravityConstant * delta;
 
         playerSprite.setX(MathUtils.clamp(playerSprite.getX(), 0, viewport.getWorldWidth() - playerSprite.getWidth()));
         playerSprite.setY(MathUtils.clamp(playerSprite.getY(), 0, viewport.getWorldHeight() - playerSprite.getHeight()));
@@ -137,7 +138,7 @@ public class GameplayScreen implements Screen {
         float worldHeight = viewport.getWorldHeight();
 
         spriteBatch.draw(backgroundTexture, 0, 0, worldWidth, worldHeight);
-        playerSprite.setRotation(MathUtils.clamp(playerSpeedY * 50, -90, 90));
+        playerSprite.setRotation(MathUtils.clamp(playerSpeedY * 20, -90, 90));
 
         playerSprite.draw(spriteBatch);
         spriteBatch.end();

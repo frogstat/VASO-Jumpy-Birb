@@ -59,6 +59,7 @@ public class MenuScreen implements Screen {
 
             public void changed(ChangeEvent event, Actor actor) {
                 Main.previousScreen = Main.ScreenTypes.MAIN_MENU;
+                dispose();
                 parent.changeScreen(Main.ScreenTypes.PREFERENCES);
             }
         });
@@ -66,6 +67,7 @@ public class MenuScreen implements Screen {
         newGame.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                dispose();
                 parent.newGame();
             }
         });

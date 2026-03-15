@@ -63,7 +63,13 @@ public class Main extends Game {
     }
 
     public void showPreferencesScreen() {
+        preferencesScreen = new PreferencesScreen(this);
         changeScreen(ScreenTypes.PREFERENCES);
+    }
+
+    public void goToMenu() {
+        menuScreen = new MenuScreen(this);
+        changeScreen(ScreenTypes.MAIN_MENU);
     }
 
 

@@ -44,8 +44,8 @@ public class PreferencesScreen implements Screen {
         List<String> themeFolders = new ArrayList<>();
         FileHandle assetsDir = Gdx.files.internal(".");
 
-        for(FileHandle child : assetsDir.list()){
-            if(child.isDirectory() && child.name().startsWith("theme_")){
+        for (FileHandle child : assetsDir.list()) {
+            if (child.isDirectory() && child.name().startsWith("theme_")) {
                 themeFolders.add(child.name());
             }
         }
@@ -82,7 +82,6 @@ public class PreferencesScreen implements Screen {
         }
 
 
-
         themeLabel = new Label(getDisplayName(themes[themeIndex]), skin);
 
         Slider musicSlider = new Slider(0f, 1f, 0.01f, false, skin);
@@ -98,7 +97,7 @@ public class PreferencesScreen implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 musicVolume = musicSlider.getValue();
-                if (parent.gameplayScreen != null){
+                if (parent.gameplayScreen != null) {
                     parent.gameplayScreen.music.setVolume(PreferencesScreen.musicVolume);
                 }
             }
@@ -116,10 +115,14 @@ public class PreferencesScreen implements Screen {
         returnButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                parent.changeScreen(Main.previousScreen);
+                dispose();
+                if (Main.previousScreen.equals(Main.ScreenTypes.MAIN_MENU)) {
+                    parent.goToMenu();
+                } else {
+                    parent.continueGame();
+                }
             }
         });
-
 
 
         change.addListener(new ChangeListener() {
@@ -165,9 +168,9 @@ public class PreferencesScreen implements Screen {
         stage.addActor(table);
     }
 
-    public String getDisplayName(String name){
-        String displayLabel = name.split("theme_",0)[1];
-        displayLabel = displayLabel.substring(0,1).toUpperCase() + displayLabel.substring(1);
+    public String getDisplayName(String name) {
+        String displayLabel = name.split("theme_", 0)[1];
+        displayLabel = displayLabel.substring(0, 1).toUpperCase() + displayLabel.substring(1);
         return displayLabel;
     }
 
