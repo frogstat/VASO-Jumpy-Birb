@@ -196,6 +196,8 @@ public class GameplayScreen implements Screen {
     }
 
     private void logic(float delta) {
+        playerSprite.setRotation(MathUtils.clamp(playerSpeedY * 20, -90, 90));
+
         moveBackground(delta);
         moveStartingPlatform(delta);
         createPlayerHitbox();
@@ -317,8 +319,6 @@ public class GameplayScreen implements Screen {
 
         spriteBatch.draw(backgroundTexture, -backgroundScrollAmount, 0, worldWidth, worldHeight);
         spriteBatch.draw(backgroundTexture, worldWidth - backgroundScrollAmount, 0, worldWidth, worldHeight);
-
-        playerSprite.setRotation(MathUtils.clamp(playerSpeedY * 20, -90, 90));
 
         for (Sprite obstacle : obstacles) {
             obstacle.draw(spriteBatch);
