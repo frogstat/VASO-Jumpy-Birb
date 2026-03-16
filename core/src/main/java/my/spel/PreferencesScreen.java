@@ -196,7 +196,7 @@ public class PreferencesScreen implements Screen {
         stage.act(delta);
         stage.draw();
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) && Main.previousScreen.equals(Main.ScreenTypes.GAMEPLAY)) {
             dispose();
             GameplayScreen.pauseTimer = 0.5f;
             parent.continueGame();
