@@ -17,12 +17,17 @@ import java.util.random.RandomGenerator;
 
 public class GameplayScreen implements Screen {
 
+    public enum Difficulty {
+        EASY, MEDIUM, HARD;
+    }
+
     Main parent;
 
     public static int highScore = 0;
     public int scoreThisRound;
     private final float scrollSpeed;
     private float backgroundScrollAmount;
+    public static Difficulty difficulty = Difficulty.MEDIUM;
 
     private final float gravityConstant;
     private float playerSpeedY;
@@ -83,6 +88,12 @@ public class GameplayScreen implements Screen {
     }
 
     public void createNewObstacle() {
+        float pipeMargin = switch (difficulty) {
+            case EASY -> 50;
+            case MEDIUM -> 45;
+            case HARD -> 40;
+        };
+
         RandomGenerator random = RandomGenerator.getDefault();
         float obstacleWidth = 20;
         float obstacleHeight = random.nextFloat(20, viewport.getWorldHeight() - 50f);
@@ -93,7 +104,7 @@ public class GameplayScreen implements Screen {
         obstacleSpriteTop.setSize(obstacleWidth, viewport.getWorldHeight());
 
         obstacleSpriteBottom.setY(0);
-        obstacleSpriteTop.setY(obstacleSpriteBottom.getHeight() + 40f);
+        obstacleSpriteTop.setY(obstacleSpriteBottom.getHeight() + pipeMargin);
 
         obstacleSpriteTop.setX(viewport.getWorldWidth() + 10);
         obstacleSpriteBottom.setX(viewport.getWorldWidth() + 10);
@@ -223,7 +234,7 @@ public class GameplayScreen implements Screen {
 
     private boolean enoughTimeHasPassedToCreateObstacle(float delta) {
         timeToCreateNewObstacle -= delta;
-        if(timeToCreateNewObstacle < 0){
+        if (timeToCreateNewObstacle < 0) {
             timeToCreateNewObstacle = 5;
             return true;
         }
