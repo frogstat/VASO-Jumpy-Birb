@@ -155,7 +155,7 @@ public class GameplayScreen implements Screen {
     }
 
     private void input(float delta) {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) || Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
             initialPause = false;
             playerSpeedY = 1f;
         }
