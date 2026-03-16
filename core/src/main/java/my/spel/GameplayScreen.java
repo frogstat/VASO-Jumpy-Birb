@@ -64,7 +64,7 @@ public class GameplayScreen implements Screen {
         gravityConstant = -4f;
 
         spriteBatch = new SpriteBatch();
-        viewport = new FitViewport(150, 100);
+        viewport = new FitViewport(178, 100);
         playerSprite = new Sprite(playerTexture);
         playerSprite.setSize(15, 15);
         playerSprite.setY(viewport.getWorldHeight() / 2);
@@ -356,6 +356,7 @@ public class GameplayScreen implements Screen {
 
     @Override
     public void dispose() {
+
 
     }
 

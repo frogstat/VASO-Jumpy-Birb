@@ -59,7 +59,7 @@ public class MenuScreen implements Screen {
             public void changed(ChangeEvent event, Actor actor) {
                 Main.previousScreen = Main.ScreenTypes.MAIN_MENU;
                 dispose();
-                parent.changeScreen(Main.ScreenTypes.PREFERENCES);
+                parent.showPreferencesScreen();
             }
         });
 
