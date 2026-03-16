@@ -237,7 +237,7 @@ public class GameplayScreen implements Screen {
     private boolean enoughTimeHasPassedToCreateObstacle(float delta) {
         timeToCreateNewObstacle -= delta;
         if (timeToCreateNewObstacle < 0) {
-            timeToCreateNewObstacle = 5;
+            timeToCreateNewObstacle = 3;
             return true;
         }
         return false;
