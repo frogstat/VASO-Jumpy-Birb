@@ -168,7 +168,7 @@ public class PreferencesScreen implements Screen {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
                     dispose();
-                    GameplayScreen.pauseTimer = 1f;
+                    GameplayScreen.pauseTimer = 0.5f;
                     parent.continueGame();
                 }
             });
