@@ -70,7 +70,7 @@ public class GameplayScreen implements Screen {
         playerSprite.setY(viewport.getWorldHeight() / 2);
         playerSprite.setX(viewport.getWorldWidth() / 2 - (viewport.getWorldWidth() / 4));
 
-        startingPlatform = new Sprite(new Texture("player_hitbox.png"));
+        startingPlatform = new Sprite(new Texture("theme_bird/platform.png"));
         startingPlatform.setY(playerSprite.getY() - 3);
         startingPlatform.setX(playerSprite.getX() - (playerSprite.getWidth() / 8));
         startingPlatform.setSize(playerSprite.getWidth(), 3);
