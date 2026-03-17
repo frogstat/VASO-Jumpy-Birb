@@ -98,13 +98,16 @@ public class GameplayScreen implements Screen {
         float obstacleWidth = 20;
         float obstacleHeight = random.nextFloat(20, viewport.getWorldHeight() - 50f);
 
-        Sprite obstacleSpriteBottom = new Sprite(new Texture("player_hitbox.png"));
-        Sprite obstacleSpriteTop = new Sprite(new Texture("player_hitbox.png"));
+        Sprite obstacleSpriteBottom = new Sprite(new Texture("theme_homer/obstacle.png"));
+        Sprite obstacleSpriteTop = new Sprite(new Texture("theme_homer/obstacle.png"));
+        obstacleSpriteTop.flip(false,true);
         obstacleSpriteBottom.setSize(obstacleWidth, obstacleHeight);
-        obstacleSpriteTop.setSize(obstacleWidth, viewport.getWorldHeight());
+
 
         obstacleSpriteBottom.setY(0);
         obstacleSpriteTop.setY(obstacleSpriteBottom.getHeight() + pipeMargin);
+        obstacleSpriteTop.setSize(obstacleWidth, viewport.getWorldHeight() - obstacleSpriteTop.getY());
+
 
         obstacleSpriteTop.setX(viewport.getWorldWidth() + 10);
         obstacleSpriteBottom.setX(viewport.getWorldWidth() + 10);
