@@ -29,7 +29,7 @@ public class PreferencesScreen implements Screen {
 
     public static String theme = "theme_bird";
     public static float musicVolume = 0.5f;
-    public static float audioVolume = 1f;
+    public static float audioVolume = 0.5f;
 
     public PreferencesScreen(Main parent) {
         this.parent = parent;
