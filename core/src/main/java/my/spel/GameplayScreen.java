@@ -96,21 +96,24 @@ public class GameplayScreen implements Screen {
 
         RandomGenerator random = RandomGenerator.getDefault();
         float obstacleWidth = 20;
-        float obstacleHeight = random.nextFloat(20, viewport.getWorldHeight() - 50f);
+        float obstacleHeight = 50;
+        float obstacleScreenHeight = random.nextFloat(20, viewport.getWorldHeight() - 50f);
 
-        Sprite obstacleSpriteBottom = new Sprite(new Texture("theme_homer/obstacle.png"));
-        Sprite obstacleSpriteTop = new Sprite(new Texture("theme_homer/obstacle.png"));
-        obstacleSpriteTop.flip(false,true);
+        Sprite obstacleSpriteBottom = new Sprite(new Texture("obstacle.png"));
         obstacleSpriteBottom.setSize(obstacleWidth, obstacleHeight);
-
-
-        obstacleSpriteBottom.setY(0);
-        obstacleSpriteTop.setY(obstacleSpriteBottom.getHeight() + pipeMargin);
-        obstacleSpriteTop.setSize(obstacleWidth, viewport.getWorldHeight() - obstacleSpriteTop.getY());
-
-
-        obstacleSpriteTop.setX(viewport.getWorldWidth() + 10);
+        obstacleSpriteBottom.setY(obstacleScreenHeight - obstacleHeight);
         obstacleSpriteBottom.setX(viewport.getWorldWidth() + 10);
+
+        Sprite obstacleSpriteTop = new Sprite(new Texture("obstacle.png"));
+        obstacleSpriteTop.setSize(obstacleWidth, obstacleHeight);
+        obstacleSpriteTop.setY((obstacleSpriteBottom.getHeight() + obstacleSpriteBottom.getY()) + pipeMargin);
+        obstacleSpriteTop.setX(viewport.getWorldWidth() + 10);
+        obstacleSpriteTop.flip(false,true);
+
+
+
+
+
 
         System.out.println("Created obstacle");
         obstacles.add(obstacleSpriteTop);
