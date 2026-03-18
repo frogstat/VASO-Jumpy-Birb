@@ -61,7 +61,7 @@ public class GameplayScreen implements Screen {
         this.parent = parent;
         theme = PreferencesScreen.theme;
         checkTheme(true);
-        gravityConstant = -4f;
+        gravityConstant = -2f;
 
         spriteBatch = new SpriteBatch();
         viewport = new FitViewport(178, 100);
@@ -81,7 +81,7 @@ public class GameplayScreen implements Screen {
         initialPause = true;
         obstacles = new ArrayList<>();
         timeToCreateNewObstacle = 0f;
-        scrollSpeed = 20f;
+        scrollSpeed = 30f;
         backgroundScrollAmount = 0;
 
         createPlayerHitbox();
@@ -89,14 +89,14 @@ public class GameplayScreen implements Screen {
 
     public void createNewObstacle() {
         float pipeMargin = switch (difficulty) {
-            case EASY -> 50;
-            case MEDIUM -> 45;
-            case HARD -> 40;
+            case EASY -> 35;
+            case MEDIUM -> 30;
+            case HARD -> 25;
         };
 
         RandomGenerator random = RandomGenerator.getDefault();
-        float obstacleWidth = 20;
-        float obstacleHeight = 50;
+        float obstacleWidth = 15;
+        float obstacleHeight = 80;
         float obstacleScreenHeight = random.nextFloat(20, viewport.getWorldHeight() - 50f);
 
         Sprite obstacleSpriteBottom = new Sprite(new Texture("obstacle.png"));
@@ -109,11 +109,6 @@ public class GameplayScreen implements Screen {
         obstacleSpriteTop.setY((obstacleSpriteBottom.getHeight() + obstacleSpriteBottom.getY()) + pipeMargin);
         obstacleSpriteTop.setX(viewport.getWorldWidth() + 10);
         obstacleSpriteTop.flip(false,true);
-
-
-
-
-
 
         System.out.println("Created obstacle");
         obstacles.add(obstacleSpriteTop);
@@ -163,7 +158,7 @@ public class GameplayScreen implements Screen {
     private void input(float delta) {
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) || Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
             initialPause = false;
-            playerSpeedY = 1f;
+            playerSpeedY = 0.5f;
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
@@ -329,6 +324,8 @@ public class GameplayScreen implements Screen {
         for (Sprite obstacle : obstacles) {
             obstacle.draw(spriteBatch);
         }
+
+
         playerSprite.draw(spriteBatch);
         startingPlatform.draw(spriteBatch);
 
@@ -336,6 +333,8 @@ public class GameplayScreen implements Screen {
         if (theme.equals("theme_simple")) {
             spriteBatch.draw(playerHitBoxTexture, playerHitBox.getX(), playerHitBox.getY(), playerHitBox.getWidth(), playerHitBox.getHeight());
         }
+
+
 
         spriteBatch.end();
     }
