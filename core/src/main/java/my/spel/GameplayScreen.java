@@ -4,7 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
@@ -41,6 +43,7 @@ public class GameplayScreen implements Screen {
     Texture playerHitBoxTexture;
 
     SpriteBatch spriteBatch;
+    SpriteBatch uiBatch;
 
     Sprite playerSprite;
     Sprite startingPlatform;
@@ -57,11 +60,18 @@ public class GameplayScreen implements Screen {
 
     public static float pauseTimer = 0;
 
+    BitmapFont font;
+
     public GameplayScreen(Main parent) {
         this.parent = parent;
         theme = PreferencesScreen.theme;
         checkTheme(true);
         gravityConstant = -2f;
+        scoreThisRound = 0;
+        uiBatch = new SpriteBatch();
+        font = new BitmapFont(Gdx.files.internal("uifont.fnt"));
+        font.getData().setScale(3f);
+        font.setColor(Color.WHITE);
 
         spriteBatch = new SpriteBatch();
         viewport = new FitViewport(178, 100);
@@ -334,9 +344,30 @@ public class GameplayScreen implements Screen {
             spriteBatch.draw(playerHitBoxTexture, playerHitBox.getX(), playerHitBox.getY(), playerHitBox.getWidth(), playerHitBox.getHeight());
         }
 
-
-
         spriteBatch.end();
+
+        createScoreUi();
+    }
+
+    private void createScoreUi() {
+        uiBatch.begin();
+        String score = "Score: " + scoreThisRound;
+        float x = 15;
+        float y = Gdx.graphics.getHeight() - 15;
+        float offset = 4f; // Outline thickness
+
+        // Draw black text in all 4 directions
+        font.setColor(Color.BLACK);
+        font.draw(uiBatch, score, x + offset, y);
+        font.draw(uiBatch, score, x - offset, y);
+        font.draw(uiBatch, score, x, y + offset);
+        font.draw(uiBatch, score, x, y - offset);
+
+        // Draw white text on top
+        font.setColor(Color.WHITE);
+        font.draw(uiBatch, score, x, y);
+
+        uiBatch.end();
     }
 
     @Override
@@ -361,7 +392,6 @@ public class GameplayScreen implements Screen {
 
     @Override
     public void dispose() {
-
 
     }
 
