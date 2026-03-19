@@ -118,9 +118,8 @@ public class GameplayScreen implements Screen {
         obstacleSpriteTop.setSize(obstacleWidth, obstacleHeight);
         obstacleSpriteTop.setY((obstacleSpriteBottom.getHeight() + obstacleSpriteBottom.getY()) + pipeMargin);
         obstacleSpriteTop.setX(viewport.getWorldWidth() + 10);
-        obstacleSpriteTop.flip(false,true);
+        obstacleSpriteTop.flip(false, true);
 
-        System.out.println("Created obstacle");
         obstacles.add(obstacleSpriteTop);
         obstacles.add(obstacleSpriteBottom);
 
@@ -238,6 +237,7 @@ public class GameplayScreen implements Screen {
         }
     }
 
+
     private void checkPlayerCollision() {
         playerSprite.setX(MathUtils.clamp(playerSprite.getX(), 0, viewport.getWorldWidth() - playerSprite.getWidth()));
         if (!playerIsDead) {
@@ -269,12 +269,22 @@ public class GameplayScreen implements Screen {
     }
 
     private void moveObstacle(float delta) {
+        boolean hasPassedObstacle = false;
+
         for (int i = obstacles.size() - 1; i >= 0; i--) {
+            float obstacleXBefore = obstacles.get(i).getX();
 
             obstacles.get(i).translateX(-20 * delta);
 
+            float obstacleXAfter = obstacles.get(i).getX();
+            if (!hasPassedObstacle) {
+                if (playerSprite.getX() < obstacleXBefore && playerSprite.getX() > obstacleXAfter) {
+                    scoreThisRound++;
+                    hasPassedObstacle = true;
+                }
+            }
+
             if (obstacles.get(i).getX() < -30) {
-                System.out.println("Removed out of bounds obstacle");
                 obstacles.remove(i);
             }
         }
