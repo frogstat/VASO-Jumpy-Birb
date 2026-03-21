@@ -2,6 +2,7 @@ package my.spel;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 
@@ -26,8 +27,11 @@ public class Main extends Game {
 
     public static ScreenTypes previousScreen;
 
+    public static Preferences prefs;
+
     @Override
     public void create() {
+        prefs = Gdx.app.getPreferences("gamedata.xml");
         music = Gdx.audio.newMusic(Gdx.files.internal("menu_music.mp3"));
         music.setVolume(PreferencesScreen.musicVolume);
         playMusic();

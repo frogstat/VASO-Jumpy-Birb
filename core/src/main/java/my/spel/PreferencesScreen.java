@@ -27,9 +27,9 @@ public class PreferencesScreen implements Screen {
     private int themeIndex;
     private Label themeLabel;
 
-    public static String theme = "theme_bird";
-    public static float musicVolume = 0.5f;
-    public static float audioVolume = 0.5f;
+    public static String theme = Main.prefs.getString("game_theme", "theme_bird");
+    public static float musicVolume = Main.prefs.getFloat("music_volume", 0.5f);
+    public static float audioVolume = Main.prefs.getFloat("audio_volume", 0.5f);
 
     public PreferencesScreen(Main parent) {
         this.parent = parent;
@@ -95,6 +95,8 @@ public class PreferencesScreen implements Screen {
             public void changed(ChangeEvent event, Actor actor) {
                 musicVolume = musicSlider.getValue();
                 parent.music.setVolume(musicVolume);
+                Main.prefs.putFloat("music_volume", musicVolume);
+                Main.prefs.flush();
             }
         });
 
@@ -102,6 +104,8 @@ public class PreferencesScreen implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 audioVolume = audioSlider.getValue();
+                Main.prefs.putFloat("audio_volume", audioVolume);
+                Main.prefs.flush();
             }
         });
 
@@ -137,6 +141,8 @@ public class PreferencesScreen implements Screen {
                 }
                 themeLabel.setText(getDisplayName(themes[themeIndex]));
                 theme = theme.toLowerCase();
+                Main.prefs.putString("game_theme", theme);
+                Main.prefs.flush();
             }
         });
 

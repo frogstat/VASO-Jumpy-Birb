@@ -174,34 +174,6 @@ public class GameplayScreen implements Screen {
             Main.previousScreen = Main.ScreenTypes.GAMEPLAY;
             parent.showPreferencesScreen();
         }
-
-        if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
-            int themeIndex = 0;
-            Main.previousScreen = Main.ScreenTypes.GAMEPLAY;
-            parent.preferencesScreen = new PreferencesScreen(parent);
-            String[] themes = parent.preferencesScreen.getThemes();
-            for (int i = 0; i < themes.length; i++) {
-                if (themes[i].equalsIgnoreCase(theme)) {
-                    themeIndex = i;
-                    break;
-                }
-            }
-
-            themeIndex++;
-
-            if (themeIndex >= themes.length) {
-                themeIndex = 0;
-            }
-
-            PreferencesScreen.theme = themes[themeIndex].toLowerCase();
-            if (Main.previousScreen.equals(Main.ScreenTypes.GAMEPLAY)) {
-                parent.music.stop();
-                parent.music = Gdx.audio.newMusic(Gdx.files.internal(PreferencesScreen.theme + "/music.mp3"));
-                parent.music.setVolume(PreferencesScreen.musicVolume);
-                parent.music.play();
-            }
-            System.out.println("Switching to " + PreferencesScreen.theme);
-        }
     }
 
     private void logic(float delta) {
@@ -229,11 +201,10 @@ public class GameplayScreen implements Screen {
         }
 
         if (isGameOver()) {
-            Preferences prefs = Gdx.app.getPreferences("gamedata");
-            int savedHighScore = prefs.getInteger("highscore", 0);
+            int savedHighScore = Main.prefs.getInteger("highscore", 0);
             if (scoreThisRound > savedHighScore) {
-                prefs.putInteger("highscore", scoreThisRound);
-                prefs.flush();
+                Main.prefs.putInteger("highscore", scoreThisRound);
+                Main.prefs.flush();
             }
 
             Main.previousScreen = Main.ScreenTypes.GAMEPLAY;
