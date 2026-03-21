@@ -126,6 +126,7 @@ public class PreferencesScreen implements Screen {
         exitButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                Main.previousScreen = Main.ScreenTypes.PREFERENCES;
                 dispose();
                 parent.goToMenu();
             }

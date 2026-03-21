@@ -2,10 +2,8 @@ package my.spel;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -26,7 +24,7 @@ public class GameplayScreen implements Screen {
 
     Main parent;
 
-    public static int highScore = 0;
+    public static int highScoreThisSession = 0;
     public int scoreThisRound;
     private final float scrollSpeed;
     private float backgroundScrollAmount;
@@ -204,6 +202,10 @@ public class GameplayScreen implements Screen {
             if (scoreThisRound > savedHighScore) {
                 Main.prefs.putInteger("highscore", scoreThisRound);
                 Main.prefs.flush();
+            }
+
+            if(scoreThisRound > highScoreThisSession){
+                highScoreThisSession = scoreThisRound;
             }
 
             Main.previousScreen = Main.ScreenTypes.GAMEPLAY;

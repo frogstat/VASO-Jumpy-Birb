@@ -15,7 +15,8 @@ public class Main extends Game {
         MAIN_MENU,
         PREFERENCES,
         GAMEPLAY,
-        GAME_OVER
+        GAME_OVER,
+        HIGH_SCORE
     }
 
     public Music music;
@@ -103,6 +104,10 @@ public class Main extends Game {
     public void playMusic() {
         music.setLooping(true);
         music.play();
+    }
+
+    public void showHighScore(){
+        setScreen(new HighScoreScreen(this));
     }
 
     public void stopMusic() {

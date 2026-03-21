@@ -18,6 +18,7 @@ public class MenuScreen implements Screen {
     private Skin skin;
     TextButton newGame;
     TextButton preferences;
+    TextButton highScore;
     TextButton exit;
 
     public MenuScreen(Main parent) {
@@ -36,20 +37,26 @@ public class MenuScreen implements Screen {
 
         newGame = new TextButton("New Game", skin);
         preferences = new TextButton("Options", skin);
+        highScore = new TextButton("High Score", skin);
         exit = new TextButton("Exit", skin);
 
         table.add(newGame).fillX().uniformX();
         table.row().pad(10, 0, 10, 0);
         table.add(preferences).fillX().uniformX();
         table.row();
+        table.add(highScore).fillX().uniformX();
+        table.row().pad(10, 0, 10, 0);;
         table.add(exit).fillX().uniformX();
 
         Gdx.input.setInputProcessor(stage);
 
-        exit.addListener(new ChangeListener() {
+
+        newGame.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                Gdx.app.exit();
+                dispose();
+                parent.stopMusic();
+                parent.newGame();
             }
         });
 
@@ -63,12 +70,18 @@ public class MenuScreen implements Screen {
             }
         });
 
-        newGame.addListener(new ChangeListener() {
+        highScore.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 dispose();
-                parent.stopMusic();
-                parent.newGame();
+                parent.showHighScore();
+            }
+        });
+
+        exit.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                Gdx.app.exit();
             }
         });
     }
