@@ -8,6 +8,9 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -46,7 +49,9 @@ public class GameplayScreen implements Screen {
     Sprite playerSprite;
     Sprite startingPlatform;
 
-    Rectangle playerHitBox;
+//    Rectangle playerHitBox;
+    Circle playerHitBox;
+    ShapeRenderer shapeRenderer;
 
     String theme;
 
@@ -83,7 +88,7 @@ public class GameplayScreen implements Screen {
         startingPlatform.setX(playerSprite.getX() - (playerSprite.getWidth() / 8));
         startingPlatform.setSize(playerSprite.getWidth(), 3);
 
-        playerHitBox = new Rectangle();
+        playerHitBox = new Circle();
         playerHitBoxTexture = new Texture("player_hitbox.png");
         playerIsDead = false;
         initialPause = true;
@@ -93,6 +98,7 @@ public class GameplayScreen implements Screen {
         backgroundScrollAmount = 0;
 
         createPlayerHitbox();
+        shapeRenderer = new ShapeRenderer();
     }
 
     public void createNewObstacle() {
@@ -252,7 +258,7 @@ public class GameplayScreen implements Screen {
         for (int i = obstacles.size() - 1; i >= 0; i--) {
             float obstacleXBefore = obstacles.get(i).getX();
 
-            obstacles.get(i).translateX(-20 * delta);
+            obstacles.get(i).translateX(-scrollSpeed * delta);
 
             float obstacleXAfter = obstacles.get(i).getX();
             if (!hasPassedObstacle && !playerIsDead) {
@@ -273,7 +279,7 @@ public class GameplayScreen implements Screen {
             Rectangle obstacleHitBox = new Rectangle();
             obstacleHitBox.set(obstacle.getX(), obstacle.getY(), obstacle.getWidth(), obstacle.getHeight());
 
-            if (playerHitBox.overlaps(obstacleHitBox)) {
+            if (Intersector.overlaps(playerHitBox,obstacleHitBox)) {
                 return true;
             }
         }
@@ -281,12 +287,18 @@ public class GameplayScreen implements Screen {
     }
 
     private void createPlayerHitbox() {
+//        playerHitBox.set(
+//            playerSprite.getX() + playerSprite.getWidth() / 4f,
+//            playerSprite.getY() + playerSprite.getHeight() / 4f,
+//            playerSprite.getWidth() / 2f,
+//            playerSprite.getHeight() / 2f
+//        );
+
         playerHitBox.set(
-            playerSprite.getX() + playerSprite.getWidth() / 4f,
-            playerSprite.getY() + playerSprite.getHeight() / 4f,
-            playerSprite.getWidth() / 2f,
-            playerSprite.getHeight() / 2f
-        );
+            playerSprite.getX() + (playerSprite.getWidth() / 2),
+            playerSprite.getY() + (playerSprite.getHeight() / 2),
+            playerSprite.getHeight() / 3
+            );
     }
 
     private void moveStartingPlatform(float delta) {
@@ -326,13 +338,23 @@ public class GameplayScreen implements Screen {
 
         playerSprite.draw(spriteBatch);
         startingPlatform.draw(spriteBatch);
-
+        spriteBatch.end();
 
         if (theme.equals("theme_simple")) {
-            spriteBatch.draw(playerHitBoxTexture, playerHitBox.getX(), playerHitBox.getY(), playerHitBox.getWidth(), playerHitBox.getHeight());
+            shapeRenderer.setProjectionMatrix(viewport.getCamera().combined);
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+            shapeRenderer.setColor(Color.RED);
+
+            shapeRenderer.circle(
+                playerHitBox.x,
+                playerHitBox.y,
+                playerHitBox.radius
+            );
+
+
+            shapeRenderer.end();
         }
 
-        spriteBatch.end();
 
         createScoreUi();
     }
