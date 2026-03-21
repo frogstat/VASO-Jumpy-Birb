@@ -1,10 +1,13 @@
 package my.spel;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -28,9 +31,20 @@ public class GameOverScreen implements Screen {
     Texture gameOverTexture;
     Table table;
     private float buttonTimer;
+    private int score;
+    private int highScore;
 
-    public GameOverScreen(Main parent){
+    BitmapFont font;
+
+    public GameOverScreen(Main parent, int score){
         this.parent = parent;
+        this.score = score;
+
+        font = new BitmapFont(Gdx.files.internal("uifont.fnt"));
+        font.getData().setScale(2f);
+
+        Preferences prefs = Gdx.app.getPreferences("gamedata");
+        highScore = prefs.getInteger("highscore", 0);
 
         gameOverTexture = new Texture("game_over.png");
         parent.playSound(Gdx.audio.newSound(Gdx.files.internal("game_over_sound.mp3")));
@@ -88,6 +102,8 @@ public class GameOverScreen implements Screen {
         if(buttonTimer == 0){
             stage.addActor(table);
         }
+        font.draw(spriteBatch, "You scored: " + score, 740, stage.getViewport().getWorldHeight() - 620);
+        font.draw(spriteBatch, "High Score: " + highScore, 755, stage.getViewport().getWorldHeight() - 720);
         spriteBatch.end();
         stage.draw();
 

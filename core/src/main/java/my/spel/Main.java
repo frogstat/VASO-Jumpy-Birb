@@ -21,7 +21,7 @@ public class Main extends Game {
 
     MenuScreen menuScreen;
     GameplayScreen gameplayScreen;
-    GameOverScreen gameOverScreen;
+//    GameOverScreen gameOverScreen;
     PreferencesScreen preferencesScreen;
 
     public static ScreenTypes previousScreen;
@@ -48,12 +48,12 @@ public class Main extends Game {
                 }
                 setScreen(gameplayScreen);
             }
-            case GAME_OVER -> {
-                if (gameOverScreen == null) {
-                    gameOverScreen = new GameOverScreen(this);
-                }
-                setScreen(gameOverScreen);
-            }
+//            case GAME_OVER -> {
+//                if (gameOverScreen == null) {
+//                    gameOverScreen = new GameOverScreen(this);
+//                }
+//                setScreen(gameOverScreen);
+//            }
             case PREFERENCES -> {
                 if (preferencesScreen == null) {
                     preferencesScreen = new PreferencesScreen(this);
@@ -90,9 +90,10 @@ public class Main extends Game {
         changeScreen(ScreenTypes.MAIN_MENU);
     }
 
-    public void goToGameOver(){
-        gameOverScreen = new GameOverScreen(this);
-        changeScreen(ScreenTypes.GAME_OVER);
+    public void goToGameOver(int score){
+//        gameOverScreen = new GameOverScreen(this);
+//        changeScreen(ScreenTypes.GAME_OVER);
+        setScreen(new GameOverScreen(this, score));
     }
 
     public void playMusic() {

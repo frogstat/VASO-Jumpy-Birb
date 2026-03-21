@@ -2,6 +2,7 @@ package my.spel;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Colors;
@@ -159,8 +160,6 @@ public class GameplayScreen implements Screen {
             playerTexture = new Texture(theme + "/player.png");
             playerTextureStill = new Texture(theme + "/player_still.png");
             playerTextureDead = new Texture(theme + "/player_dead.png");
-
-
         }
     }
 
@@ -230,10 +229,17 @@ public class GameplayScreen implements Screen {
         }
 
         if (isGameOver()) {
+            Preferences prefs = Gdx.app.getPreferences("gamedata");
+            int savedHighScore = prefs.getInteger("highscore", 0);
+            if (scoreThisRound > savedHighScore) {
+                prefs.putInteger("highscore", scoreThisRound);
+                prefs.flush();
+            }
+
             Main.previousScreen = Main.ScreenTypes.GAMEPLAY;
             dispose();
             parent.stopMusic();
-            parent.goToGameOver();
+            parent.goToGameOver(scoreThisRound);
         }
     }
 
@@ -277,7 +283,7 @@ public class GameplayScreen implements Screen {
             obstacles.get(i).translateX(-20 * delta);
 
             float obstacleXAfter = obstacles.get(i).getX();
-            if (!hasPassedObstacle) {
+            if (!hasPassedObstacle && !playerIsDead) {
                 if (playerSprite.getX() < obstacleXBefore && playerSprite.getX() > obstacleXAfter) {
                     scoreThisRound++;
                     hasPassedObstacle = true;
