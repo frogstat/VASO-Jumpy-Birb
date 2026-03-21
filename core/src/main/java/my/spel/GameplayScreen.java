@@ -30,8 +30,7 @@ public class GameplayScreen implements Screen {
     public int scoreThisRound;
     private final float scrollSpeed;
     private float backgroundScrollAmount;
-    public static Difficulty difficulty = Difficulty.MEDIUM;
-
+    public static Difficulty difficulty = Difficulty.valueOf(Main.prefs.getString("difficulty", Difficulty.MEDIUM.name()));
     private final float gravityConstant;
     private float playerSpeedY;
 

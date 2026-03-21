@@ -27,6 +27,10 @@ public class PreferencesScreen implements Screen {
     private int themeIndex;
     private Label themeLabel;
 
+    private final GameplayScreen.Difficulty[] difficulties = GameplayScreen.Difficulty.values();
+    private Label difficultyLabel;
+    private int difficultyIndex;
+
     public static String theme = Main.prefs.getString("game_theme", "theme_bird");
     public static float musicVolume = Main.prefs.getFloat("music_volume", 0.5f);
     public static float audioVolume = Main.prefs.getFloat("audio_volume", 0.5f);
@@ -80,6 +84,14 @@ public class PreferencesScreen implements Screen {
 
 
         themeLabel = new Label(getDisplayName(themes[themeIndex]), skin);
+
+
+        difficultyIndex = Arrays.asList(difficulties).indexOf(GameplayScreen.difficulty);
+        if (difficultyIndex < 0) difficultyIndex = 0;
+
+        difficultyLabel = new Label(difficulties[difficultyIndex].name(), skin);
+        TextButton changeDifficulty = new TextButton("Change", skin);
+
 
         Slider musicSlider = new Slider(0f, 1f, 0.01f, false, skin);
         musicSlider.setValue(musicVolume);
@@ -146,9 +158,27 @@ public class PreferencesScreen implements Screen {
             }
         });
 
+        changeDifficulty.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                difficultyIndex++;
+                if (difficultyIndex >= difficulties.length) {
+                    difficultyIndex = 0;
+                }
+                GameplayScreen.difficulty = difficulties[difficultyIndex];
+                difficultyLabel.setText(difficulties[difficultyIndex].name());
+                Main.prefs.putString("difficulty", GameplayScreen.difficulty.name());
+                Main.prefs.flush();
+            }
+        });
+
         Table themeSelector = new Table();
         themeSelector.add(themeLabel).width(150).center();
         themeSelector.add(change).pad(10);
+
+        Table difficultySelector = new Table();
+        difficultySelector.add(difficultyLabel).width(150).center();
+        difficultySelector.add(changeDifficulty).pad(10);
 
         Table table = new Table();
         table.setFillParent(true);
@@ -156,6 +186,11 @@ public class PreferencesScreen implements Screen {
         table.add(new Label("Theme", skin)).pad(10);
         table.row();
         table.add(themeSelector).pad(20);
+
+        table.row();
+        table.add(new Label("Difficulty", skin)).pad(10);
+        table.row();
+        table.add(difficultySelector).pad(20);
 
         table.row();
         table.add(musicLabel).padTop(20);
