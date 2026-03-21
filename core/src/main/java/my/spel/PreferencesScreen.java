@@ -3,6 +3,7 @@ package my.spel;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -10,9 +11,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-import java.awt.*;
-import java.io.File;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -83,14 +81,14 @@ public class PreferencesScreen implements Screen {
         }
 
 
-        themeLabel = new Label(getDisplayName(themes[themeIndex]), skin);
-
+        themeLabel = new Label(getThemeDisplayName(themes[themeIndex]), skin, "big");
 
         difficultyIndex = Arrays.asList(difficulties).indexOf(GameplayScreen.difficulty);
         if (difficultyIndex < 0) difficultyIndex = 0;
 
-        difficultyLabel = new Label(difficulties[difficultyIndex].name(), skin);
+        difficultyLabel = new Label(getGenericDisplayName(difficulties[difficultyIndex].name()), skin, "big");
         TextButton changeDifficulty = new TextButton("Change", skin);
+        changeDifficulty.setSize(10, 10);
 
 
         Slider musicSlider = new Slider(0f, 1f, 0.01f, false, skin);
@@ -151,46 +149,45 @@ public class PreferencesScreen implements Screen {
                     parent.music.setVolume(musicVolume);
                     parent.music.play();
                 }
-                themeLabel.setText(getDisplayName(themes[themeIndex]));
+                themeLabel.setText(getThemeDisplayName(themes[themeIndex]));
                 theme = theme.toLowerCase();
                 Main.prefs.putString("game_theme", theme);
                 Main.prefs.flush();
             }
         });
 
-        changeDifficulty.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                difficultyIndex++;
-                if (difficultyIndex >= difficulties.length) {
-                    difficultyIndex = 0;
-                }
-                GameplayScreen.difficulty = difficulties[difficultyIndex];
-                difficultyLabel.setText(difficulties[difficultyIndex].name());
-                Main.prefs.putString("difficulty", GameplayScreen.difficulty.name());
-                Main.prefs.flush();
-            }
-        });
 
         Table themeSelector = new Table();
-        themeSelector.add(themeLabel).width(150).center();
         themeSelector.add(change).pad(10);
-
-        Table difficultySelector = new Table();
-        difficultySelector.add(difficultyLabel).width(150).center();
-        difficultySelector.add(changeDifficulty).pad(10);
+        themeSelector.add(themeLabel).width(150).center().pad(20);
 
         Table table = new Table();
         table.setFillParent(true);
 
-        table.add(new Label("Theme", skin)).pad(10);
+        table.add(new Label("Theme", skin, "big")).pad(10);
         table.row();
         table.add(themeSelector).pad(20);
 
-        table.row();
-        table.add(new Label("Difficulty", skin)).pad(10);
-        table.row();
-        table.add(difficultySelector).pad(20);
+        if (Main.previousScreen.equals(Main.ScreenTypes.MAIN_MENU)) {
+            table.row();
+            table.add(new Label("Difficulty", skin, "big")).pad(10);
+            table.row();
+            Table difficultySelector = new Table();
+            difficultySelector.add(changeDifficulty).pad(10);
+            difficultySelector.add(difficultyLabel).width(150).center().pad(20);
+            table.add(difficultySelector).pad(20);
+
+            changeDifficulty.addListener(new ChangeListener() {
+                @Override
+                public void changed(ChangeEvent event, Actor actor) {
+                    difficultyIndex++;
+                    if (difficultyIndex >= difficulties.length) {
+                        difficultyIndex = 0;
+                    }
+                    setDifficulty();
+                }
+            });
+        }
 
         table.row();
         table.add(musicLabel).padTop(20);
@@ -223,10 +220,21 @@ public class PreferencesScreen implements Screen {
         stage.addActor(table);
     }
 
-    public String getDisplayName(String name) {
+    public String getThemeDisplayName(String name) {
         String displayLabel = name.split("theme_", 0)[1];
         displayLabel = displayLabel.substring(0, 1).toUpperCase() + displayLabel.substring(1);
         return displayLabel;
+    }
+
+    public String getGenericDisplayName(String name) {
+        return name.substring(0,1).toUpperCase() + name.substring(1).toLowerCase();
+    }
+
+    private void setDifficulty(){
+        GameplayScreen.difficulty = difficulties[difficultyIndex];
+        difficultyLabel.setText(getGenericDisplayName(difficulties[difficultyIndex].name()));
+        Main.prefs.putString("difficulty", GameplayScreen.difficulty.name());
+        Main.prefs.flush();
     }
 
     @Override

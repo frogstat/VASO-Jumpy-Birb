@@ -43,8 +43,7 @@ public class GameOverScreen implements Screen {
         font = new BitmapFont(Gdx.files.internal("uifont.fnt"));
         font.getData().setScale(2f);
 
-        Preferences prefs = Gdx.app.getPreferences("gamedata");
-        highScore = prefs.getInteger("highscore", 0);
+        highScore = Main.prefs.getInteger("highscore", 0);
 
         gameOverTexture = new Texture("game_over.png");
         parent.playSound(Gdx.audio.newSound(Gdx.files.internal("game_over_sound.mp3")));
