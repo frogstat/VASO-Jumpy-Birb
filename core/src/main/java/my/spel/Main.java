@@ -31,7 +31,7 @@ public class Main extends Game {
 
     @Override
     public void create() {
-        prefs = Gdx.app.getPreferences("gamedata.xml");
+        prefs = Gdx.app.getPreferences("VASO_jumpyBird/gamedata.xml");
         music = Gdx.audio.newMusic(Gdx.files.internal("menu_music.mp3"));
         music.setVolume(PreferencesScreen.musicVolume);
         playMusic();
