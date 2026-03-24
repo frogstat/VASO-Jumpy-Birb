@@ -30,7 +30,6 @@ public class GameOverScreen implements Screen {
     SpriteBatch spriteBatch;
     Texture gameOverTexture;
     Table table;
-    private float buttonTimer;
     private int score;
     private int highScore;
 
@@ -49,8 +48,6 @@ public class GameOverScreen implements Screen {
         parent.playSound(Gdx.audio.newSound(Gdx.files.internal("game_over_sound.mp3")));
         spriteBatch = new SpriteBatch();
         viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        buttonTimer = 2.5f;
-
     }
 
     @Override
@@ -86,20 +83,14 @@ public class GameOverScreen implements Screen {
         spriteBatch.setProjectionMatrix(stage.getCamera().combined); // match stage viewport
         spriteBatch.begin();
         spriteBatch.draw(gameOverTexture, 0, 0, stage.getViewport().getWorldWidth(), stage.getViewport().getWorldHeight());
-        if (buttonTimer == 0) {
-            stage.addActor(table);
-            font.draw(spriteBatch, "You scored: " + score, 740, stage.getViewport().getWorldHeight() - 620);
-            //font.draw(spriteBatch, "High Score: " + highScore, 755, stage.getViewport().getWorldHeight() - 720);
-            font.draw(spriteBatch, "High Score: " + GameplayScreen.highScoreThisSession, 755, stage.getViewport().getWorldHeight() - 720);
-            font.draw(spriteBatch, "Press space to try again", 600, stage.getViewport().getWorldHeight() - 820);
-        }
+        stage.addActor(table);
+        font.draw(spriteBatch, "You scored: " + score, 740, stage.getViewport().getWorldHeight() - 620);
+        //font.draw(spriteBatch, "High Score: " + highScore, 755, stage.getViewport().getWorldHeight() - 720);
+        font.draw(spriteBatch, "High Score: " + GameplayScreen.highScoreThisSession, 755, stage.getViewport().getWorldHeight() - 720);
+        font.draw(spriteBatch, "Press space to try again", 600, stage.getViewport().getWorldHeight() - 820);
+
         spriteBatch.end();
         stage.draw();
-
-        buttonTimer -= delta;
-        if (buttonTimer < 0) {
-            buttonTimer = 0;
-        }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             dispose();
