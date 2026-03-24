@@ -29,7 +29,7 @@ public class PreferencesScreen implements Screen {
     private Label difficultyLabel;
     private int difficultyIndex;
 
-    public static String theme = Main.prefs.getString("game_theme", "theme_simple");
+    public static String theme = "theme_simple";
     public static float musicVolume = Main.prefs.getFloat("music_volume", 0.5f);
     public static float audioVolume = Main.prefs.getFloat("audio_volume", 0.5f);
 
@@ -151,8 +151,6 @@ public class PreferencesScreen implements Screen {
                 }
                 themeLabel.setText(getThemeDisplayName(themes[themeIndex]));
                 theme = theme.toLowerCase();
-                Main.prefs.putString("game_theme", theme);
-                Main.prefs.flush();
             }
         });
 

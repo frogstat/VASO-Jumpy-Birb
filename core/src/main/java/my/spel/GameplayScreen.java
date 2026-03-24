@@ -295,10 +295,12 @@ public class GameplayScreen implements Screen {
 //            playerSprite.getHeight() / 2f
 //        );
 
+        float playerHitboxSize = 2.285f;
+
         playerHitBox.set(
             playerSprite.getX() + (playerSprite.getWidth() / 2),
             playerSprite.getY() + (playerSprite.getHeight() / 2),
-            playerSprite.getHeight() / 3
+            playerSprite.getHeight() / playerHitboxSize
             );
     }
 
