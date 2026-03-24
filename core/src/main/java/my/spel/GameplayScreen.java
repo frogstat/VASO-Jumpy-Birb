@@ -51,7 +51,7 @@ public class GameplayScreen implements Screen {
     Sprite playerSprite;
     Sprite startingPlatform;
 
-//    Rectangle playerHitBox;
+    //    Rectangle playerHitBox;
     Circle playerHitBox;
     ShapeRenderer shapeRenderer;
 
@@ -64,6 +64,7 @@ public class GameplayScreen implements Screen {
     private boolean initialPause;
 
     public static float pauseTimer = 0;
+    private float deathTimer;
 
     BitmapFont font;
 
@@ -100,6 +101,7 @@ public class GameplayScreen implements Screen {
 
         createPlayerHitbox();
         shapeRenderer = new ShapeRenderer();
+        deathTimer = 2f;
     }
 
     public void createNewObstacle() {
@@ -184,43 +186,50 @@ public class GameplayScreen implements Screen {
     private void logic(float delta) {
         playerSprite.setRotation(MathUtils.clamp(playerSpeedY * 20, -90, 90));
 
-        moveBackground(delta);
-        moveStartingPlatform(delta);
-        createPlayerHitbox();
-
-        if (enoughTimeHasPassedToCreateObstacle(delta)) {
-            createNewObstacle();
-        }
         if (!playerIsDead) {
+            createPlayerHitbox();
+            if (enoughTimeHasPassedToCreateObstacle(delta)) {
+                createNewObstacle();
+            }
+            moveBackground(delta);
+            moveStartingPlatform(delta);
+            moveObstacle(delta);
             if (playerHasCollidedWithObstacle()) {
                 killPlayer();
             }
+            movePlayerGravity(delta);
+            checkPlayerCollision();
+        } else {
+            takePlayerToHeaven(delta);
+            if (isGameOver(delta)) {
+                int savedHighScore = Main.prefs.getInteger("highscore", 0);
+                if (scoreThisRound > savedHighScore) {
+                    Main.prefs.putInteger("highscore", scoreThisRound);
+                    Main.prefs.flush();
+                }
+
+                if (scoreThisRound > highScoreThisSession) {
+                    highScoreThisSession = scoreThisRound;
+                }
+
+                Main.previousScreen = Main.ScreenTypes.GAMEPLAY;
+                dispose();
+                parent.stopMusic();
+                parent.goToGameOver(scoreThisRound);
+            }
         }
 
-        moveObstacle(delta);
-        movePlayerGravity(delta);
-        checkPlayerCollision();
 
         if (playerSprite.getY() == 0) {
             killPlayer();
         }
 
-        if (isGameOver()) {
-            int savedHighScore = Main.prefs.getInteger("highscore", 0);
-            if (scoreThisRound > savedHighScore) {
-                Main.prefs.putInteger("highscore", scoreThisRound);
-                Main.prefs.flush();
-            }
+    }
 
-            if(scoreThisRound > highScoreThisSession){
-                highScoreThisSession = scoreThisRound;
-            }
-
-            Main.previousScreen = Main.ScreenTypes.GAMEPLAY;
-            dispose();
-            parent.stopMusic();
-            parent.goToGameOver(scoreThisRound);
-        }
+    private void takePlayerToHeaven(float delta) {
+        playerSpeedY = 15f;
+        playerSprite.setRotation(0);
+        playerSprite.translateY(playerSpeedY * delta);
     }
 
 
@@ -242,11 +251,16 @@ public class GameplayScreen implements Screen {
 
     private void killPlayer() {
         playerIsDead = true;
-        parent.playSound(Gdx.audio.newSound(Gdx.files.internal(theme + "/death_sound.mp3")));
+        parent.playSound(Gdx.audio.newSound(Gdx.files.internal(theme + "/angel.mp3")));
     }
 
-    private boolean isGameOver() {
-        return playerSprite.getY() < -200;
+    private boolean isGameOver(float delta) {
+        deathTimer -= delta;
+
+        if(deathTimer < 0){
+            deathTimer = 0;
+        }
+        return playerSprite.getY() >= viewport.getWorldHeight() || deathTimer == 0;
     }
 
     private void movePlayerGravity(float delta) {
@@ -281,7 +295,7 @@ public class GameplayScreen implements Screen {
             Rectangle obstacleHitBox = new Rectangle();
             obstacleHitBox.set(obstacle.getX(), obstacle.getY(), obstacle.getWidth(), obstacle.getHeight());
 
-            if (Intersector.overlaps(playerHitBox,obstacleHitBox)) {
+            if (Intersector.overlaps(playerHitBox, obstacleHitBox)) {
                 return true;
             }
         }
@@ -302,7 +316,7 @@ public class GameplayScreen implements Screen {
             playerSprite.getX() + (playerSprite.getWidth() / 2),
             playerSprite.getY() + (playerSprite.getHeight() / 2),
             playerSprite.getHeight() / playerHitboxSize
-            );
+        );
     }
 
     private void moveStartingPlatform(float delta) {
@@ -333,7 +347,6 @@ public class GameplayScreen implements Screen {
         float worldHeight = viewport.getWorldHeight();
 
 
-
         spriteBatch.draw(backgroundTexture, -backgroundScrollAmount, 0, worldWidth, worldHeight);
         spriteBatch.draw(backgroundTexture, worldWidth - backgroundScrollAmount, 0, worldWidth, worldHeight);
 
@@ -344,8 +357,6 @@ public class GameplayScreen implements Screen {
         playerSprite.draw(spriteBatch);
         startingPlatform.draw(spriteBatch);
         spriteBatch.end();
-
-
 
 
         createScoreUi();
