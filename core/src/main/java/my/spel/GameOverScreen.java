@@ -1,6 +1,7 @@
 package my.spel;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Sound;
@@ -35,7 +36,7 @@ public class GameOverScreen implements Screen {
 
     BitmapFont font;
 
-    public GameOverScreen(Main parent, int score){
+    public GameOverScreen(Main parent, int score) {
         this.parent = parent;
         this.score = score;
 
@@ -59,16 +60,6 @@ public class GameOverScreen implements Screen {
 
         skin = new Skin(Gdx.files.internal("skin/glassy-ui.json"));
 
-        TextButton retryButton = new TextButton("Play Again", skin);
-
-        retryButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                dispose();
-                parent.newGame();
-            }
-        });
-
         TextButton menuButton = new TextButton("Title Screen", skin);
 
         menuButton.addListener(new ChangeListener() {
@@ -83,8 +74,6 @@ public class GameOverScreen implements Screen {
         table.setFillParent(true);
         table.bottom();
         table.row();
-        table.add(retryButton).padBottom(30);
-        table.row();
         table.add(menuButton).padBottom(30);
 
 
@@ -97,17 +86,24 @@ public class GameOverScreen implements Screen {
         spriteBatch.setProjectionMatrix(stage.getCamera().combined); // match stage viewport
         spriteBatch.begin();
         spriteBatch.draw(gameOverTexture, 0, 0, stage.getViewport().getWorldWidth(), stage.getViewport().getWorldHeight());
-        if(buttonTimer == 0){
+        if (buttonTimer == 0) {
             stage.addActor(table);
             font.draw(spriteBatch, "You scored: " + score, 740, stage.getViewport().getWorldHeight() - 620);
-            font.draw(spriteBatch, "High Score: " + highScore, 755, stage.getViewport().getWorldHeight() - 720);
+            //font.draw(spriteBatch, "High Score: " + highScore, 755, stage.getViewport().getWorldHeight() - 720);
+            font.draw(spriteBatch, "High Score: " + GameplayScreen.highScoreThisSession, 755, stage.getViewport().getWorldHeight() - 720);
+            font.draw(spriteBatch, "Press space to try again", 600, stage.getViewport().getWorldHeight() - 820);
         }
         spriteBatch.end();
         stage.draw();
 
         buttonTimer -= delta;
-        if(buttonTimer < 0){
+        if (buttonTimer < 0) {
             buttonTimer = 0;
+        }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+            dispose();
+            parent.newGame();
         }
     }
 

@@ -85,9 +85,9 @@ public class HighScoreScreen implements Screen {
         layout.setText(font, text1);
         font.draw(spriteBatch, text1, (width - layout.width) / 2, height / 2);
 
-        String text2 = "Highest Score total: " + Main.prefs.getInteger("highscore", 0);
-        layout.setText(font, text2);
-        font.draw(spriteBatch, text2, (width - layout.width) / 2, (height / 2) - 100);
+//        String text2 = "Highest Score total: " + Main.prefs.getInteger("highscore", 0);
+//        layout.setText(font, text2);
+//        font.draw(spriteBatch, text2, (width - layout.width) / 2, (height / 2) - 100);
 
         spriteBatch.end();
         stage.draw();

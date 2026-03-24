@@ -31,7 +31,8 @@ public class GameplayScreen implements Screen {
     public int scoreThisRound;
     private final float scrollSpeed;
     private float backgroundScrollAmount;
-    public static Difficulty difficulty = Difficulty.valueOf(Main.prefs.getString("difficulty", Difficulty.MEDIUM.name()));
+    //public static Difficulty difficulty = Difficulty.valueOf(Main.prefs.getString("difficulty", Difficulty.MEDIUM.name()));
+    public static Difficulty difficulty = Difficulty.MEDIUM;
     private final float gravityConstant;
     private float playerSpeedY;
 
@@ -83,7 +84,7 @@ public class GameplayScreen implements Screen {
         playerSprite.setY(viewport.getWorldHeight() / 2);
         playerSprite.setX(viewport.getWorldWidth() / 2 - (viewport.getWorldWidth() / 4));
 
-        startingPlatform = new Sprite(new Texture("theme_bird/platform.png"));
+        startingPlatform = new Sprite(new Texture("theme_simple/platform.png"));
         startingPlatform.setY(playerSprite.getY() - 3);
         startingPlatform.setX(playerSprite.getX() - (playerSprite.getWidth() / 8));
         startingPlatform.setSize(playerSprite.getWidth(), 3);

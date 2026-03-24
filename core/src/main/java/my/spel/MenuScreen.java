@@ -1,6 +1,7 @@
 package my.spel;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -31,21 +32,25 @@ public class MenuScreen implements Screen {
 
         Table table = new Table();
         table.setFillParent(true);
+        table.padTop(300);
         stage.addActor(table);
 
         skin = new Skin(Gdx.files.internal("skin/glassy-ui.json"));
 
-        newGame = new TextButton("New Game", skin);
+        newGame = new TextButton("Start", skin);
         preferences = new TextButton("Options", skin);
         highScore = new TextButton("High Score", skin);
         exit = new TextButton("Exit", skin);
 
-        table.add(newGame).fillX().uniformX();
-        table.row().pad(10, 0, 10, 0);
+
+        table.add(newGame).fillX().uniformX().padBottom(30);
+        table.row().pad(10, 0, 30, 0);
         table.add(preferences).fillX().uniformX();
+        table.row().pad(10, 0, 30, 0);
         table.row();
+        table.row().pad(10, 0, 30, 0);;
         table.add(highScore).fillX().uniformX();
-        table.row().pad(10, 0, 10, 0);;
+        table.row().pad(10, 0, 30, 0);;
         table.add(exit).fillX().uniformX();
 
         Gdx.input.setInputProcessor(stage);

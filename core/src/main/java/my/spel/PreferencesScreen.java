@@ -29,7 +29,7 @@ public class PreferencesScreen implements Screen {
     private Label difficultyLabel;
     private int difficultyIndex;
 
-    public static String theme = Main.prefs.getString("game_theme", "theme_bird");
+    public static String theme = Main.prefs.getString("game_theme", "theme_simple");
     public static float musicVolume = Main.prefs.getFloat("music_volume", 0.5f);
     public static float audioVolume = Main.prefs.getFloat("audio_volume", 0.5f);
 
@@ -164,30 +164,30 @@ public class PreferencesScreen implements Screen {
         Table table = new Table();
         table.setFillParent(true);
 
-        table.add(new Label("Theme", skin, "big")).pad(10);
-        table.row();
-        table.add(themeSelector).pad(20);
+//        table.add(new Label("Theme", skin, "big")).pad(10);
+//        table.row();
+//        table.add(themeSelector).pad(20);
 
-        if (Main.previousScreen.equals(Main.ScreenTypes.MAIN_MENU)) {
-            table.row();
-            table.add(new Label("Difficulty", skin, "big")).pad(10);
-            table.row();
-            Table difficultySelector = new Table();
-            difficultySelector.add(changeDifficulty).pad(10);
-            difficultySelector.add(difficultyLabel).width(150).center().pad(20);
-            table.add(difficultySelector).pad(20);
-
-            changeDifficulty.addListener(new ChangeListener() {
-                @Override
-                public void changed(ChangeEvent event, Actor actor) {
-                    difficultyIndex++;
-                    if (difficultyIndex >= difficulties.length) {
-                        difficultyIndex = 0;
-                    }
-                    setDifficulty();
-                }
-            });
-        }
+//        if (Main.previousScreen.equals(Main.ScreenTypes.MAIN_MENU)) {
+//            table.row();
+//            table.add(new Label("Difficulty", skin, "big")).pad(10);
+//            table.row();
+//            Table difficultySelector = new Table();
+//            difficultySelector.add(changeDifficulty).pad(10);
+//            difficultySelector.add(difficultyLabel).width(150).center().pad(20);
+//            table.add(difficultySelector).pad(20);
+//
+//            changeDifficulty.addListener(new ChangeListener() {
+//                @Override
+//                public void changed(ChangeEvent event, Actor actor) {
+//                    difficultyIndex++;
+//                    if (difficultyIndex >= difficulties.length) {
+//                        difficultyIndex = 0;
+//                    }
+//                    setDifficulty();
+//                }
+//            });
+//        }
 
         table.row();
         table.add(musicLabel).padTop(20);
