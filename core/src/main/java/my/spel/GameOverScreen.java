@@ -25,6 +25,7 @@ public class GameOverScreen implements Screen {
 
     private Stage stage;
     private Skin skin;
+    Sound gameOverSound;
 
     FitViewport viewport;
     SpriteBatch spriteBatch;
@@ -45,7 +46,8 @@ public class GameOverScreen implements Screen {
         highScore = Main.prefs.getInteger("highscore", 0);
 
         gameOverTexture = new Texture("game_over.png");
-        parent.playSound(Gdx.audio.newSound(Gdx.files.internal("game_over_sound.mp3")));
+        gameOverSound = Gdx.audio.newSound(Gdx.files.internal("game_over_sound.mp3"));
+        parent.playSound(gameOverSound);
         spriteBatch = new SpriteBatch();
         viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
@@ -95,6 +97,7 @@ public class GameOverScreen implements Screen {
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             dispose();
             parent.newGame();
+            parent.stopSound(gameOverSound);
         }
     }
 

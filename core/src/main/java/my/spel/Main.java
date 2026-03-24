@@ -118,5 +118,9 @@ public class Main extends Game {
         sound.play(PreferencesScreen.audioVolume);
     }
 
+    public void stopSound(Sound sound){
+        sound.stop();
+    }
+
 
 }

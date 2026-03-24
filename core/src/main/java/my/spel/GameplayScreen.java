@@ -3,6 +3,7 @@ package my.spel;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -57,6 +58,8 @@ public class GameplayScreen implements Screen {
 
     String theme;
 
+    private Sound angelSound;
+
     List<Sprite> obstacles;
     float timeToCreateNewObstacle;
 
@@ -90,6 +93,8 @@ public class GameplayScreen implements Screen {
         startingPlatform.setY(playerSprite.getY() - 3);
         startingPlatform.setX(playerSprite.getX() - (playerSprite.getWidth() / 8));
         startingPlatform.setSize(playerSprite.getWidth(), 3);
+
+        angelSound = Gdx.audio.newSound(Gdx.files.internal(theme + "/angel.mp3"));
 
         playerHitBox = new Circle();
         playerIsDead = false;
@@ -201,7 +206,9 @@ public class GameplayScreen implements Screen {
             checkPlayerCollision();
         } else {
             takePlayerToHeaven(delta);
+
             if (isGameOver(delta)) {
+                parent.stopSound(angelSound);
                 int savedHighScore = Main.prefs.getInteger("highscore", 0);
                 if (scoreThisRound > savedHighScore) {
                     Main.prefs.putInteger("highscore", scoreThisRound);
@@ -251,7 +258,7 @@ public class GameplayScreen implements Screen {
 
     private void killPlayer() {
         playerIsDead = true;
-        parent.playSound(Gdx.audio.newSound(Gdx.files.internal(theme + "/angel.mp3")));
+        parent.playSound(angelSound);
     }
 
     private boolean isGameOver(float delta) {
