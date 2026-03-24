@@ -43,6 +43,7 @@ public class GameplayScreen implements Screen {
     Texture playerTextureStill;
     Texture playerTextureDead;
     Texture playerHitBoxTexture;
+    Texture startingPlatformTexture;
 
     SpriteBatch spriteBatch;
     SpriteBatch uiBatch;
@@ -84,13 +85,12 @@ public class GameplayScreen implements Screen {
         playerSprite.setY(viewport.getWorldHeight() / 2);
         playerSprite.setX(viewport.getWorldWidth() / 2 - (viewport.getWorldWidth() / 4));
 
-        startingPlatform = new Sprite(new Texture("theme_simple/platform.png"));
+        startingPlatform = new Sprite(startingPlatformTexture);
         startingPlatform.setY(playerSprite.getY() - 3);
         startingPlatform.setX(playerSprite.getX() - (playerSprite.getWidth() / 8));
         startingPlatform.setSize(playerSprite.getWidth(), 3);
 
         playerHitBox = new Circle();
-        playerHitBoxTexture = new Texture("player_hitbox.png");
         playerIsDead = false;
         initialPause = true;
         obstacles = new ArrayList<>();
@@ -164,6 +164,7 @@ public class GameplayScreen implements Screen {
             playerTexture = new Texture(theme + "/player.png");
             playerTextureStill = new Texture(theme + "/player_still.png");
             playerTextureDead = new Texture(theme + "/player_dead.png");
+            startingPlatformTexture = new Texture(theme + "/platform.png");
         }
     }
 
@@ -331,6 +332,8 @@ public class GameplayScreen implements Screen {
         float worldWidth = viewport.getWorldWidth();
         float worldHeight = viewport.getWorldHeight();
 
+
+
         spriteBatch.draw(backgroundTexture, -backgroundScrollAmount, 0, worldWidth, worldHeight);
         spriteBatch.draw(backgroundTexture, worldWidth - backgroundScrollAmount, 0, worldWidth, worldHeight);
 
@@ -338,25 +341,11 @@ public class GameplayScreen implements Screen {
             obstacle.draw(spriteBatch);
         }
 
-
         playerSprite.draw(spriteBatch);
         startingPlatform.draw(spriteBatch);
         spriteBatch.end();
 
-        if (theme.equals("theme_simple")) {
-            shapeRenderer.setProjectionMatrix(viewport.getCamera().combined);
-            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-            shapeRenderer.setColor(Color.RED);
 
-            shapeRenderer.circle(
-                playerHitBox.x,
-                playerHitBox.y,
-                playerHitBox.radius
-            );
-
-
-            shapeRenderer.end();
-        }
 
 
         createScoreUi();
