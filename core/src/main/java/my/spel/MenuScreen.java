@@ -38,19 +38,19 @@ public class MenuScreen implements Screen {
         skin = new Skin(Gdx.files.internal("skin/glassy-ui.json"));
 
         newGame = new TextButton("Start", skin);
-        preferences = new TextButton("Options", skin);
+//        preferences = new TextButton("Options", skin);
         highScore = new TextButton("High Score", skin);
         exit = new TextButton("Exit", skin);
 
 
         table.add(newGame).fillX().uniformX().padBottom(30);
-        table.row().pad(10, 0, 30, 0);
-        table.add(preferences).fillX().uniformX();
+//        table.row().pad(10, 0, 30, 0);
+//        table.add(preferences).fillX().uniformX();
         table.row().pad(10, 0, 30, 0);
         table.row();
-        table.row().pad(10, 0, 30, 0);;
+        table.row().pad(10, 0, 30, 0);
         table.add(highScore).fillX().uniformX();
-        table.row().pad(10, 0, 30, 0);;
+        table.row().pad(10, 0, 30, 0);
         table.add(exit).fillX().uniformX();
 
         Gdx.input.setInputProcessor(stage);
@@ -65,15 +65,15 @@ public class MenuScreen implements Screen {
             }
         });
 
-        preferences.addListener(new ChangeListener() {
-            @Override
-
-            public void changed(ChangeEvent event, Actor actor) {
-                Main.previousScreen = Main.ScreenTypes.MAIN_MENU;
-                dispose();
-                parent.showPreferencesScreen();
-            }
-        });
+//        preferences.addListener(new ChangeListener() {
+//            @Override
+//
+//            public void changed(ChangeEvent event, Actor actor) {
+//                Main.previousScreen = Main.ScreenTypes.MAIN_MENU;
+//                dispose();
+//                parent.showPreferencesScreen();
+//            }
+//        });
 
         highScore.addListener(new ChangeListener() {
             @Override

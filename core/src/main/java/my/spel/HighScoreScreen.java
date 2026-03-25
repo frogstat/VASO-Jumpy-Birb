@@ -41,7 +41,7 @@ public class HighScoreScreen implements Screen {
         skin = new Skin(Gdx.files.internal("skin/glassy-ui.json"));
 
         TextButton menuButton = new TextButton("Title Screen", skin);
-        TextButton resetButton = new TextButton("Reset high score", skin);
+//        TextButton resetButton = new TextButton("Reset high score", skin);
 
         menuButton.addListener(new ChangeListener() {
             @Override
@@ -52,20 +52,20 @@ public class HighScoreScreen implements Screen {
             }
         });
 
-        resetButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                Main.prefs.putInteger("highscore", 0);
-                GameplayScreen.highScoreThisSession = 0;
-            }
-        });
+//        resetButton.addListener(new ChangeListener() {
+//            @Override
+//            public void changed(ChangeEvent event, Actor actor) {
+//                Main.prefs.putInteger("highscore", 0);
+//                GameplayScreen.highScoreThisSession = 0;
+//            }
+//        });
 
         table = new Table();
         table.setFillParent(true);
         table.bottom();
         table.row();
-        table.add(resetButton).padBottom(30);
-        table.row();
+//        table.add(resetButton).padBottom(30);
+//        table.row();
         table.add(menuButton).padBottom(30);
     }
 
