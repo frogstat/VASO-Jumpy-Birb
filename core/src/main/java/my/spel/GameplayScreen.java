@@ -32,6 +32,7 @@ public class GameplayScreen implements Screen {
     public int scoreThisRound;
     private final float scrollSpeed;
     private float backgroundScrollAmount;
+    private float skyScrollAmount;
     //public static Difficulty difficulty = Difficulty.valueOf(Main.prefs.getString("difficulty", Difficulty.MEDIUM.name()));
     public static Difficulty difficulty = Difficulty.MEDIUM;
     private final float gravityConstant;
@@ -40,10 +41,10 @@ public class GameplayScreen implements Screen {
     FitViewport viewport;
 
     Texture backgroundTexture;
+    Texture skyTexture;
     Texture playerTexture;
     Texture playerTextureStill;
     Texture playerTextureDead;
-    Texture playerHitBoxTexture;
     Texture startingPlatformTexture;
 
     SpriteBatch spriteBatch;
@@ -52,7 +53,6 @@ public class GameplayScreen implements Screen {
     Sprite playerSprite;
     Sprite startingPlatform;
 
-    //    Rectangle playerHitBox;
     Circle playerHitBox;
     ShapeRenderer shapeRenderer;
 
@@ -103,6 +103,7 @@ public class GameplayScreen implements Screen {
         timeToCreateNewObstacle = 0f;
         scrollSpeed = 30f;
         backgroundScrollAmount = 0;
+        skyScrollAmount = 0;
 
         createPlayerHitbox();
         shapeRenderer = new ShapeRenderer();
@@ -112,7 +113,7 @@ public class GameplayScreen implements Screen {
     public void createNewObstacle() {
         float pipeMargin = switch (difficulty) {
             case EASY -> 35;
-            case MEDIUM -> 30;
+            case MEDIUM -> 25;
             case HARD -> 25;
         };
 
@@ -168,6 +169,7 @@ public class GameplayScreen implements Screen {
         if (firstTime || !theme.equals(PreferencesScreen.theme)) {
             theme = PreferencesScreen.theme;
             backgroundTexture = new Texture(theme + "/background.png");
+            skyTexture = new Texture(theme + "/sky.png");
             playerTexture = new Texture(theme + "/player.png");
             playerTextureStill = new Texture(theme + "/player_still.png");
             playerTextureDead = new Texture(theme + "/player_dead.png");
@@ -201,6 +203,7 @@ public class GameplayScreen implements Screen {
             moveObstacle(delta);
             if (playerHasCollidedWithObstacle()) {
                 killPlayer();
+
             }
             movePlayerGravity(delta);
             checkPlayerCollision();
@@ -250,7 +253,7 @@ public class GameplayScreen implements Screen {
     private boolean enoughTimeHasPassedToCreateObstacle(float delta) {
         timeToCreateNewObstacle -= delta;
         if (timeToCreateNewObstacle < 0) {
-            timeToCreateNewObstacle = 3;
+            timeToCreateNewObstacle = 1.5f;
             return true;
         }
         return false;
@@ -317,7 +320,7 @@ public class GameplayScreen implements Screen {
 //            playerSprite.getHeight() / 2f
 //        );
 
-        float playerHitboxSize = 2.285f;
+        float playerHitboxSize = 3f;
 
         playerHitBox.set(
             playerSprite.getX() + (playerSprite.getWidth() / 2),
@@ -334,6 +337,11 @@ public class GameplayScreen implements Screen {
         backgroundScrollAmount += (scrollSpeed / 2) * delta;
         if (backgroundScrollAmount > viewport.getWorldWidth()) {
             backgroundScrollAmount = 0;
+        }
+
+        skyScrollAmount += (scrollSpeed / 3) * delta;
+        if (skyScrollAmount > viewport.getWorldWidth()) {
+            skyScrollAmount = 0;
         }
     }
 
@@ -354,6 +362,8 @@ public class GameplayScreen implements Screen {
         float worldHeight = viewport.getWorldHeight();
 
 
+        spriteBatch.draw(skyTexture, -skyScrollAmount, 0, worldWidth, worldHeight);
+        spriteBatch.draw(skyTexture, worldWidth - skyScrollAmount, 0, worldWidth, worldHeight);
         spriteBatch.draw(backgroundTexture, -backgroundScrollAmount, 0, worldWidth, worldHeight);
         spriteBatch.draw(backgroundTexture, worldWidth - backgroundScrollAmount, 0, worldWidth, worldHeight);
 
