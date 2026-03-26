@@ -37,6 +37,7 @@ public class GameplayScreen implements Screen {
     public static Difficulty difficulty = Difficulty.MEDIUM;
     private final float gravityConstant;
     private float playerSpeedY;
+    private float jumpSpeed;
 
     FitViewport viewport;
 
@@ -75,7 +76,7 @@ public class GameplayScreen implements Screen {
         this.parent = parent;
         theme = PreferencesScreen.theme;
         checkTheme(true);
-        gravityConstant = -2f;
+
         scoreThisRound = 0;
         uiBatch = new SpriteBatch();
         font = new BitmapFont(Gdx.files.internal("uifont.fnt"));
@@ -95,6 +96,8 @@ public class GameplayScreen implements Screen {
         startingPlatform.setSize(playerSprite.getWidth(), 3);
 
         angelSound = Gdx.audio.newSound(Gdx.files.internal(theme + "/angel.mp3"));
+        jumpSpeed = 70f;
+        gravityConstant = -210f;
 
         playerHitBox = new Circle();
         playerIsDead = false;
@@ -180,7 +183,7 @@ public class GameplayScreen implements Screen {
     private void input(float delta) {
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) || Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
             initialPause = false;
-            playerSpeedY = 0.5f;
+            playerSpeedY = jumpSpeed;
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
@@ -191,7 +194,7 @@ public class GameplayScreen implements Screen {
     }
 
     private void logic(float delta) {
-        playerSprite.setRotation(MathUtils.clamp(playerSpeedY * 20, -90, 90));
+        playerSprite.setRotation(MathUtils.clamp(playerSpeedY/3, -90, 90));
 
         if (!playerIsDead) {
             createPlayerHitbox();
@@ -274,7 +277,7 @@ public class GameplayScreen implements Screen {
     }
 
     private void movePlayerGravity(float delta) {
-        playerSprite.translateY(playerSpeedY);
+        playerSprite.translateY(playerSpeedY * delta);
         playerSpeedY += gravityConstant * delta;
     }
 
