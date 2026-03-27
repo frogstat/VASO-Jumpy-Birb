@@ -116,7 +116,7 @@ public class GameplayScreen implements Screen {
     public void createNewObstacle() {
         float pipeMargin = switch (difficulty) {
             case EASY -> 35;
-            case MEDIUM -> 25;
+            case MEDIUM -> 29;
             case HARD -> 25;
         };
 
