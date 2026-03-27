@@ -41,7 +41,7 @@ public class GameOverScreen implements Screen {
         this.score = score;
 
         font = new BitmapFont(Gdx.files.internal("uifont.fnt"));
-        font.getData().setScale(2f);
+        font.getData().setScale(1f);
 
         highScore = Main.prefs.getInteger("highscore", 0);
 
@@ -86,10 +86,10 @@ public class GameOverScreen implements Screen {
         spriteBatch.begin();
         spriteBatch.draw(gameOverTexture, 0, 0, stage.getViewport().getWorldWidth(), stage.getViewport().getWorldHeight());
         stage.addActor(table);
-        font.draw(spriteBatch, "You scored: " + score, 740, stage.getViewport().getWorldHeight() - 620);
+        font.draw(spriteBatch, "You scored: " + score, 700, stage.getViewport().getWorldHeight() - 620);
         //font.draw(spriteBatch, "High Score: " + highScore, 755, stage.getViewport().getWorldHeight() - 720);
-        font.draw(spriteBatch, "High Score: " + GameplayScreen.highScoreThisSession, 755, stage.getViewport().getWorldHeight() - 720);
-        font.draw(spriteBatch, "Press space to try again", 600, stage.getViewport().getWorldHeight() - 820);
+        font.draw(spriteBatch, "High Score: " + GameplayScreen.highScoreThisSession, 710, stage.getViewport().getWorldHeight() - 720);
+        font.draw(spriteBatch, "Press space to try again", 510, stage.getViewport().getWorldHeight() - 850);
 
         spriteBatch.end();
         stage.draw();

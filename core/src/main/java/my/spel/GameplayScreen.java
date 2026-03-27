@@ -80,7 +80,7 @@ public class GameplayScreen implements Screen {
         scoreThisRound = 0;
         uiBatch = new SpriteBatch();
         font = new BitmapFont(Gdx.files.internal("uifont.fnt"));
-        font.getData().setScale(3f);
+        font.getData().setScale(1f);
         font.setColor(Color.WHITE);
 
         spriteBatch = new SpriteBatch();
@@ -116,7 +116,7 @@ public class GameplayScreen implements Screen {
     public void createNewObstacle() {
         float pipeMargin = switch (difficulty) {
             case EASY -> 35;
-            case MEDIUM -> 25;
+            case MEDIUM -> 30;
             case HARD -> 25;
         };
 
