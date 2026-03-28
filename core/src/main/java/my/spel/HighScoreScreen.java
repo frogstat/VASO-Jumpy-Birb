@@ -29,7 +29,7 @@ public class HighScoreScreen implements Screen {
         this.parent = parent;
 
         font = new BitmapFont(Gdx.files.internal("uifont.fnt"));
-        font.getData().setScale(2f);
+        font.getData().setScale(1f);
         spriteBatch = new SpriteBatch();
         viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
