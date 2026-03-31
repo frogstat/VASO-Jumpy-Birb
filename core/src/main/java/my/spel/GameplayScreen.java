@@ -47,12 +47,14 @@ public class GameplayScreen implements Screen {
     Texture playerTextureStill;
     Texture playerTextureDead;
     Texture startingPlatformTexture;
+    Texture promptTexture;
 
     SpriteBatch spriteBatch;
     SpriteBatch uiBatch;
 
     Sprite playerSprite;
     Sprite startingPlatform;
+    Sprite promptSprite;
 
     Circle playerHitBox;
     ShapeRenderer shapeRenderer;
@@ -89,6 +91,11 @@ public class GameplayScreen implements Screen {
         playerSprite.setSize(15, 15);
         playerSprite.setY(viewport.getWorldHeight() / 2);
         playerSprite.setX(viewport.getWorldWidth() / 2 - (viewport.getWorldWidth() / 4));
+
+        promptSprite = new Sprite(promptTexture);
+        promptSprite.setSize(66, 7.5f);
+        promptSprite.setX(viewport.getWorldWidth()/2 - promptSprite.getWidth()/2);
+        promptSprite.setY(viewport.getWorldHeight() / 7);
 
         startingPlatform = new Sprite(startingPlatformTexture);
         startingPlatform.setY(playerSprite.getY() - 3);
@@ -177,6 +184,7 @@ public class GameplayScreen implements Screen {
             playerTextureStill = new Texture(theme + "/player_still.png");
             playerTextureDead = new Texture(theme + "/player_dead.png");
             startingPlatformTexture = new Texture(theme + "/platform.png");
+            promptTexture = new Texture(theme + "/prompt.png");
         }
     }
 
@@ -376,6 +384,11 @@ public class GameplayScreen implements Screen {
 
         playerSprite.draw(spriteBatch);
         startingPlatform.draw(spriteBatch);
+
+        if (initialPause){
+            promptSprite.draw(spriteBatch);
+        }
+
         spriteBatch.end();
 
 
