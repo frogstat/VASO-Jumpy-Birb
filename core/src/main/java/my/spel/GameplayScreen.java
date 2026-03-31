@@ -218,6 +218,9 @@ public class GameplayScreen implements Screen {
             }
             movePlayerGravity(delta);
             checkPlayerCollision();
+            if (playerSprite.getY() == -4) {
+                killPlayer();
+            }
         } else {
             takePlayerToHeaven(delta);
 
@@ -240,11 +243,6 @@ public class GameplayScreen implements Screen {
             }
         }
 
-
-        if (playerSprite.getY() == 0) {
-            killPlayer();
-        }
-
     }
 
     private void takePlayerToHeaven(float delta) {
@@ -257,7 +255,7 @@ public class GameplayScreen implements Screen {
     private void checkPlayerCollision() {
         playerSprite.setX(MathUtils.clamp(playerSprite.getX(), 0, viewport.getWorldWidth() - playerSprite.getWidth()));
         if (!playerIsDead) {
-            playerSprite.setY(MathUtils.clamp(playerSprite.getY(), 0, viewport.getWorldHeight() - playerSprite.getHeight()));
+            playerSprite.setY(MathUtils.clamp(playerSprite.getY(), -4, viewport.getWorldHeight() - playerSprite.getHeight() + 3));
         }
     }
 
@@ -281,7 +279,7 @@ public class GameplayScreen implements Screen {
         if(deathTimer < 0){
             deathTimer = 0;
         }
-        return playerSprite.getY() >= viewport.getWorldHeight() || deathTimer == 0;
+        return deathTimer == 0;
     }
 
     private void movePlayerGravity(float delta) {
