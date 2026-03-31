@@ -96,6 +96,11 @@ public class MenuScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act(delta);
         stage.draw();
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+            dispose();
+            parent.stopMusic();
+            parent.newGame();
+        }
     }
 
     @Override
