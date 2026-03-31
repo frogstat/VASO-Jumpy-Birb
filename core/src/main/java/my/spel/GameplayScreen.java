@@ -111,7 +111,7 @@ public class GameplayScreen implements Screen {
         initialPause = true;
         obstacles = new ArrayList<>();
         timeToCreateNewObstacle = 0f;
-        scrollSpeed = 30f;
+        scrollSpeed = 40f;
         backgroundScrollAmount = 0;
         skyScrollAmount = 0;
 
@@ -193,12 +193,6 @@ public class GameplayScreen implements Screen {
             initialPause = false;
             playerSpeedY = jumpSpeed;
         }
-
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-
-            Main.previousScreen = Main.ScreenTypes.GAMEPLAY;
-            parent.showPreferencesScreen();
-        }
     }
 
     private void logic(float delta) {
@@ -262,7 +256,7 @@ public class GameplayScreen implements Screen {
     private boolean enoughTimeHasPassedToCreateObstacle(float delta) {
         timeToCreateNewObstacle -= delta;
         if (timeToCreateNewObstacle < 0) {
-            timeToCreateNewObstacle = 1.5f;
+            timeToCreateNewObstacle = 1.6f;
             return true;
         }
         return false;
