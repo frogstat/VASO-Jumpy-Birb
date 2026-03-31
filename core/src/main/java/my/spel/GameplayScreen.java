@@ -62,6 +62,7 @@ public class GameplayScreen implements Screen {
     String theme;
 
     private Sound angelSound;
+    private Sound whoopSound;
 
     List<Sprite> obstacles;
     float timeToCreateNewObstacle;
@@ -103,6 +104,7 @@ public class GameplayScreen implements Screen {
         startingPlatform.setSize(playerSprite.getWidth(), 3);
 
         angelSound = Gdx.audio.newSound(Gdx.files.internal(theme + "/angel.mp3"));
+        whoopSound = Gdx.audio.newSound(Gdx.files.internal("whoop.mp3"));
         jumpSpeed = 70f;
         gravityConstant = -210f;
 
@@ -192,6 +194,7 @@ public class GameplayScreen implements Screen {
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) || Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
             initialPause = false;
             playerSpeedY = jumpSpeed;
+            parent.playSound(whoopSound);
         }
     }
 
