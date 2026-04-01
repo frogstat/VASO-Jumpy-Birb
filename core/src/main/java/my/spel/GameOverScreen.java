@@ -39,14 +39,15 @@ public class GameOverScreen implements Screen {
     public GameOverScreen(Main parent, int score) {
         this.parent = parent;
         this.score = score;
+        skin = new Skin(Gdx.files.internal(Main.skinPath));
 
-        font = new BitmapFont(Gdx.files.internal("uifont.fnt"));
+        font = new BitmapFont(Gdx.files.internal("game_assets/uifont.fnt"));
         font.getData().setScale(1f);
 
         highScore = Main.prefs.getInteger("highscore", 0);
 
-        gameOverTexture = new Texture("game_over.png");
-        gameOverSound = Gdx.audio.newSound(Gdx.files.internal("game_over_sound.mp3"));
+        gameOverTexture = new Texture("game_assets/game_over.png");
+        gameOverSound = Gdx.audio.newSound(Gdx.files.internal("game_assets/game_over_sound.mp3"));
         parent.playSound(gameOverSound);
         spriteBatch = new SpriteBatch();
         viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -57,7 +58,7 @@ public class GameOverScreen implements Screen {
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
 
-        skin = new Skin(Gdx.files.internal("skin/glassy-ui.json"));
+
 
         TextButton menuButton = new TextButton("Title Screen", skin);
 
@@ -88,7 +89,7 @@ public class GameOverScreen implements Screen {
         stage.addActor(table);
         font.draw(spriteBatch, "You scored: " + score, 700, stage.getViewport().getWorldHeight() - 620);
         //font.draw(spriteBatch, "High Score: " + highScore, 755, stage.getViewport().getWorldHeight() - 720);
-        font.draw(spriteBatch, "High Score: " + GameplayScreen.highScoreThisSession, 710, stage.getViewport().getWorldHeight() - 720);
+        font.draw(spriteBatch, "High Score: " + Main.prefs.getInteger("highscore", 0), 710, stage.getViewport().getWorldHeight() - 720);
         font.draw(spriteBatch, "Press space to try again", 510, stage.getViewport().getWorldHeight() - 850);
 
         spriteBatch.end();
@@ -103,7 +104,7 @@ public class GameOverScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-        viewport.update(width, height, true);
+        stage.getViewport().update(width, height, true);
     }
 
     @Override
@@ -123,7 +124,6 @@ public class GameOverScreen implements Screen {
 
     @Override
     public void dispose() {
-        stage.dispose();
-        skin.dispose();
+
     }
 }

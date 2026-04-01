@@ -5,15 +5,18 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 /**
  * {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms.
  */
 public class Main extends Game {
 
+    public static String skinPath = "game_assets/skin/glassy-ui.json";
+
     public enum ScreenTypes {
         MAIN_MENU,
-        PREFERENCES,
+        DIFFICULTY_SELECTOR,
         GAMEPLAY,
         GAME_OVER,
         HIGH_SCORE
@@ -23,8 +26,8 @@ public class Main extends Game {
 
     MenuScreen menuScreen;
     GameplayScreen gameplayScreen;
-//    GameOverScreen gameOverScreen;
-    PreferencesScreen preferencesScreen;
+    DifficultySelectorScreen difficultySelectorScreen;
+
 
     public static ScreenTypes previousScreen;
 
@@ -33,8 +36,7 @@ public class Main extends Game {
     @Override
     public void create() {
         prefs = Gdx.app.getPreferences("VASO_jumpyBird/gamedata.xml");
-        music = Gdx.audio.newMusic(Gdx.files.internal("menu_music.mp3"));
-        music.setVolume(PreferencesScreen.musicVolume);
+        music = Gdx.audio.newMusic(Gdx.files.internal("game_assets/menu_music.mp3"));
         playMusic();
         changeScreen(ScreenTypes.MAIN_MENU);
     }
@@ -53,17 +55,11 @@ public class Main extends Game {
                 }
                 setScreen(gameplayScreen);
             }
-//            case GAME_OVER -> {
-//                if (gameOverScreen == null) {
-//                    gameOverScreen = new GameOverScreen(this);
-//                }
-//                setScreen(gameOverScreen);
-//            }
-            case PREFERENCES -> {
-                if (preferencesScreen == null) {
-                    preferencesScreen = new PreferencesScreen(this);
+            case DIFFICULTY_SELECTOR -> {
+                if (difficultySelectorScreen == null) {
+                    difficultySelectorScreen = new DifficultySelectorScreen(this);
                 }
-                setScreen(preferencesScreen);
+                setScreen(difficultySelectorScreen);
             }
         }
     }
@@ -71,7 +67,7 @@ public class Main extends Game {
     public void newGame() {
         gameplayScreen = new GameplayScreen(this);
         music.stop();
-        music = Gdx.audio.newMusic(Gdx.files.internal(gameplayScreen.theme + "/music.mp3"));
+        music = Gdx.audio.newMusic(Gdx.files.internal("game_assets/" + gameplayScreen.theme + "/music.mp3"));
         playMusic();
         changeScreen(ScreenTypes.GAMEPLAY);
     }
@@ -80,24 +76,17 @@ public class Main extends Game {
         changeScreen(ScreenTypes.GAMEPLAY);
     }
 
-    public void showPreferencesScreen() {
-        preferencesScreen = new PreferencesScreen(this);
-        changeScreen(ScreenTypes.PREFERENCES);
-    }
-
     public void goToMenu() {
         if (previousScreen.equals(ScreenTypes.GAMEPLAY)) {
             stopMusic();
-            music = Gdx.audio.newMusic(Gdx.files.internal("menu_music.mp3"));
+            music = Gdx.audio.newMusic(Gdx.files.internal("game_assets/menu_music.mp3"));
             playMusic();
         }
         menuScreen = new MenuScreen(this);
         changeScreen(ScreenTypes.MAIN_MENU);
     }
 
-    public void goToGameOver(int score){
-//        gameOverScreen = new GameOverScreen(this);
-//        changeScreen(ScreenTypes.GAME_OVER);
+    public void goToGameOver(int score) {
         setScreen(new GameOverScreen(this, score));
     }
 
@@ -110,16 +99,16 @@ public class Main extends Game {
 //        music.stop();
     }
 
-    public void showHighScore(){
+    public void showHighScore() {
         setScreen(new HighScoreScreen(this));
     }
 
 
-    public void playSound(Sound sound){
-        sound.play(PreferencesScreen.audioVolume);
+    public void playSound(Sound sound) {
+        sound.play();
     }
 
-    public void stopSound(Sound sound){
+    public void stopSound(Sound sound) {
         sound.stop();
     }
 

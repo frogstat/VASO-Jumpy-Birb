@@ -1,7 +1,6 @@
 package my.spel;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -12,68 +11,72 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-public class MenuScreen implements Screen {
+public class DifficultySelectorScreen implements Screen {
 
     private Main parent;
+
     private Stage stage;
     private Skin skin;
-    TextButton newGame;
-    TextButton preferences;
-    TextButton highScore;
-    TextButton exit;
 
-    public MenuScreen(Main parent) {
+    TextButton easy;
+    TextButton medium;
+    TextButton hard;
+
+    public DifficultySelectorScreen(Main parent) {
         this.parent = parent;
-        stage = new Stage(new ScreenViewport());
         skin = new Skin(Gdx.files.internal(Main.skinPath));
     }
 
     @Override
     public void show() {
-
+        stage = new Stage(new ScreenViewport());
         Table table = new Table();
         table.setFillParent(true);
         table.padTop(300);
         stage.addActor(table);
 
-        newGame = new TextButton("Start", skin);
-        highScore = new TextButton("High Score", skin);
-        exit = new TextButton("Exit", skin);
+        easy = new TextButton("Easy", skin);
+        medium = new TextButton("Medium", skin);
+        hard = new TextButton("Hard", skin);
 
-
-        table.add(newGame).fillX().uniformX().padBottom(30);
-        table.row().pad(10, 0, 30, 0);
-        table.row();
-        table.row().pad(10, 0, 30, 0);
-        table.add(highScore).fillX().uniformX();
-        table.row().pad(10, 0, 30, 0);
-        table.add(exit).fillX().uniformX();
+        table.add(easy);
+        table.pad(0, 30, 0, 30);
+        table.add(medium);
+        table.pad(0, 30, 0, 30);
+        table.add(hard);
 
         Gdx.input.setInputProcessor(stage);
 
-
-        newGame.addListener(new ChangeListener() {
+        easy.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 dispose();
-                parent.changeScreen(Main.ScreenTypes.DIFFICULTY_SELECTOR);
+                startGame(GameplayScreen.Difficulty.EASY);
             }
         });
 
-        highScore.addListener(new ChangeListener() {
+        medium.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 dispose();
-                parent.showHighScore();
+                startGame(GameplayScreen.Difficulty.MEDIUM);
             }
         });
 
-        exit.addListener(new ChangeListener() {
+        hard.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                Gdx.app.exit();
+                dispose();
+                startGame(GameplayScreen.Difficulty.HARD);
             }
         });
+
+    }
+
+    public void startGame(GameplayScreen.Difficulty difficulty){
+        parent.stopMusic();
+        GameplayScreen.difficulty = difficulty;
+        parent.newGame();
     }
 
     @Override
@@ -81,16 +84,13 @@ public class MenuScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act(delta);
         stage.draw();
-        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-            dispose();
-            parent.changeScreen(Main.ScreenTypes.DIFFICULTY_SELECTOR);
-        }
     }
 
     @Override
     public void resize(int width, int height) {
         stage.getViewport().update(width, height, true);
     }
+
 
     @Override
     public void pause() {
@@ -109,6 +109,5 @@ public class MenuScreen implements Screen {
 
     @Override
     public void dispose() {
-
     }
 }

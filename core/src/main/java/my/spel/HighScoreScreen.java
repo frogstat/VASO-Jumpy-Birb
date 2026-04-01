@@ -17,10 +17,10 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class HighScoreScreen implements Screen {
 
-    private Main parent;
-    private BitmapFont font;
-    private SpriteBatch spriteBatch;
-    private FitViewport viewport;
+    private final Main parent;
+    private final BitmapFont font;
+    private final SpriteBatch spriteBatch;
+    private final FitViewport viewport;
     private Stage stage;
     private Skin skin;
     Table table;
@@ -28,20 +28,20 @@ public class HighScoreScreen implements Screen {
     public HighScoreScreen(Main parent) {
         this.parent = parent;
 
-        font = new BitmapFont(Gdx.files.internal("uifont.fnt"));
+        font = new BitmapFont(Gdx.files.internal("game_assets/uifont.fnt"));
         font.getData().setScale(1f);
         spriteBatch = new SpriteBatch();
         viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        skin = new Skin(Gdx.files.internal(Main.skinPath));
     }
 
     @Override
     public void show() {
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
-        skin = new Skin(Gdx.files.internal("skin/glassy-ui.json"));
+
 
         TextButton menuButton = new TextButton("Title Screen", skin);
-//        TextButton resetButton = new TextButton("Reset high score", skin);
 
         menuButton.addListener(new ChangeListener() {
             @Override
@@ -52,20 +52,10 @@ public class HighScoreScreen implements Screen {
             }
         });
 
-//        resetButton.addListener(new ChangeListener() {
-//            @Override
-//            public void changed(ChangeEvent event, Actor actor) {
-//                Main.prefs.putInteger("highscore", 0);
-//                GameplayScreen.highScoreThisSession = 0;
-//            }
-//        });
-
         table = new Table();
         table.setFillParent(true);
         table.bottom();
         table.row();
-//        table.add(resetButton).padBottom(30);
-//        table.row();
         table.add(menuButton).padBottom(30);
     }
 
@@ -81,13 +71,9 @@ public class HighScoreScreen implements Screen {
 
         GlyphLayout layout = new GlyphLayout();
 
-        String text1 = "Highest score this session: " + GameplayScreen.highScoreThisSession;
-        layout.setText(font, text1);
-        font.draw(spriteBatch, text1, (width - layout.width) / 2, height / 2);
-
-//        String text2 = "Highest Score total: " + Main.prefs.getInteger("highscore", 0);
-//        layout.setText(font, text2);
-//        font.draw(spriteBatch, text2, (width - layout.width) / 2, (height / 2) - 100);
+        String text2 = "Highest Score total: " + Main.prefs.getInteger("highscore", 0);
+        layout.setText(font, text2);
+        font.draw(spriteBatch, text2, (width - layout.width) / 2, (height / 2) - 100);
 
         spriteBatch.end();
         stage.draw();
@@ -95,7 +81,7 @@ public class HighScoreScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-        viewport.update(width, height, true);
+        stage.getViewport().update(width, height, true);
     }
 
     @Override
@@ -115,7 +101,6 @@ public class HighScoreScreen implements Screen {
 
     @Override
     public void dispose() {
-        stage.dispose();
-        skin.dispose();
+
     }
 }

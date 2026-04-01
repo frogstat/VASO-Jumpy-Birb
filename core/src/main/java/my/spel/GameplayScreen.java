@@ -26,18 +26,18 @@ public class GameplayScreen implements Screen {
         EASY, MEDIUM, HARD;
     }
 
-    Main parent;
+    public static Difficulty difficulty = Difficulty.MEDIUM;
 
-    public static int highScoreThisSession = 0;
+    Main parent;
+    RandomGenerator random;
+
     public int scoreThisRound;
     private final float scrollSpeed;
     private float backgroundScrollAmount;
     private float skyScrollAmount;
-    //public static Difficulty difficulty = Difficulty.valueOf(Main.prefs.getString("difficulty", Difficulty.MEDIUM.name()));
-    public static Difficulty difficulty = Difficulty.MEDIUM;
     private final float gravityConstant;
     private float playerSpeedY;
-    private float jumpSpeed;
+    private final float jumpSpeed;
 
     FitViewport viewport;
 
@@ -48,6 +48,7 @@ public class GameplayScreen implements Screen {
     Texture playerTextureDead;
     Texture startingPlatformTexture;
     Texture promptTexture;
+    Texture obstacleTexture;
 
     SpriteBatch spriteBatch;
     SpriteBatch uiBatch;
@@ -61,8 +62,8 @@ public class GameplayScreen implements Screen {
 
     String theme;
 
-    private Sound angelSound;
-    private Sound whoopSound;
+    private final Sound angelSound;
+    private final Sound whoopSound;
 
     List<Sprite> obstacles;
     float timeToCreateNewObstacle;
@@ -77,12 +78,14 @@ public class GameplayScreen implements Screen {
 
     public GameplayScreen(Main parent) {
         this.parent = parent;
-        theme = PreferencesScreen.theme;
-        checkTheme(true);
+        random = RandomGenerator.getDefault();
+
+        theme = difficulty.equals(Difficulty.HARD) ? "theme_hard" : "theme_normal";
+        applyTheme();
 
         scoreThisRound = 0;
         uiBatch = new SpriteBatch();
-        font = new BitmapFont(Gdx.files.internal("uifont.fnt"));
+        font = new BitmapFont(Gdx.files.internal("game_assets/uifont.fnt"));
         font.getData().setScale(1f);
         font.setColor(Color.WHITE);
 
@@ -95,7 +98,7 @@ public class GameplayScreen implements Screen {
 
         promptSprite = new Sprite(promptTexture);
         promptSprite.setSize(66, 7.5f);
-        promptSprite.setX(viewport.getWorldWidth()/2 - promptSprite.getWidth()/2);
+        promptSprite.setX(viewport.getWorldWidth() / 2 - promptSprite.getWidth() / 2);
         promptSprite.setY(viewport.getWorldHeight() / 7);
 
         startingPlatform = new Sprite(startingPlatformTexture);
@@ -103,8 +106,8 @@ public class GameplayScreen implements Screen {
         startingPlatform.setX(playerSprite.getX() - (playerSprite.getWidth() / 8));
         startingPlatform.setSize(playerSprite.getWidth(), 3);
 
-        angelSound = Gdx.audio.newSound(Gdx.files.internal(theme + "/angel.mp3"));
-        whoopSound = Gdx.audio.newSound(Gdx.files.internal("whoop.mp3"));
+        angelSound = Gdx.audio.newSound(Gdx.files.internal("game_assets/" + theme + "/angel.mp3"));
+        whoopSound = Gdx.audio.newSound(Gdx.files.internal("game_assets/" + theme + "/whoop.mp3"));
         jumpSpeed = 70f;
         gravityConstant = -210f;
 
@@ -124,22 +127,21 @@ public class GameplayScreen implements Screen {
 
     public void createNewObstacle() {
         float pipeMargin = switch (difficulty) {
-            case EASY -> 35;
-            case MEDIUM -> 30;
+            case EASY -> 32;
+            case MEDIUM -> 28;
             case HARD -> 25;
         };
 
-        RandomGenerator random = RandomGenerator.getDefault();
         float obstacleWidth = 15;
         float obstacleHeight = 80;
         float obstacleScreenHeight = random.nextFloat(20, viewport.getWorldHeight() - 50f);
 
-        Sprite obstacleSpriteBottom = new Sprite(new Texture("obstacle.png"));
+        Sprite obstacleSpriteBottom = new Sprite(obstacleTexture);
         obstacleSpriteBottom.setSize(obstacleWidth, obstacleHeight);
         obstacleSpriteBottom.setY(obstacleScreenHeight - obstacleHeight);
         obstacleSpriteBottom.setX(viewport.getWorldWidth() + 10);
 
-        Sprite obstacleSpriteTop = new Sprite(new Texture("obstacle.png"));
+        Sprite obstacleSpriteTop = new Sprite(obstacleTexture);
         obstacleSpriteTop.setSize(obstacleWidth, obstacleHeight);
         obstacleSpriteTop.setY((obstacleSpriteBottom.getHeight() + obstacleSpriteBottom.getY()) + pipeMargin);
         obstacleSpriteTop.setX(viewport.getWorldWidth() + 10);
@@ -157,10 +159,8 @@ public class GameplayScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        checkTheme(false);
-
         if (!playerIsDead) {
-            input(delta);
+            input();
         }
 
         if (pauseTimer == 0 && !initialPause) {
@@ -177,20 +177,21 @@ public class GameplayScreen implements Screen {
         }
     }
 
-    private void checkTheme(boolean firstTime) {
-        if (firstTime || !theme.equals(PreferencesScreen.theme)) {
-            theme = PreferencesScreen.theme;
-            backgroundTexture = new Texture(theme + "/background.png");
-            skyTexture = new Texture(theme + "/sky.png");
-            playerTexture = new Texture(theme + "/player.png");
-            playerTextureStill = new Texture(theme + "/player_still.png");
-            playerTextureDead = new Texture(theme + "/player_dead.png");
-            startingPlatformTexture = new Texture(theme + "/platform.png");
-            promptTexture = new Texture(theme + "/prompt.png");
-        }
+    private void applyTheme() {
+        String assetsRoot = "game_assets/";
+
+        backgroundTexture = new Texture(assetsRoot + theme + "/background.png");
+        skyTexture = new Texture(assetsRoot + theme + "/sky.png");
+        playerTexture = new Texture(assetsRoot + theme + "/player.png");
+        playerTextureStill = new Texture(assetsRoot + theme + "/player_still.png");
+        playerTextureDead = new Texture(assetsRoot + theme + "/player_dead.png");
+        startingPlatformTexture = new Texture(assetsRoot + theme + "/platform.png");
+        promptTexture = new Texture(assetsRoot + theme + "/prompt.png");
+        obstacleTexture = new Texture(assetsRoot + theme + "/obstacle.png");
+
     }
 
-    private void input(float delta) {
+    private void input() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) || Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
             initialPause = false;
             playerSpeedY = jumpSpeed;
@@ -199,7 +200,7 @@ public class GameplayScreen implements Screen {
     }
 
     private void logic(float delta) {
-        playerSprite.setRotation(MathUtils.clamp(playerSpeedY/3, -90, 90));
+        playerSprite.setRotation(MathUtils.clamp(playerSpeedY / 3, -90, 90));
 
         if (!playerIsDead) {
             createPlayerHitbox();
@@ -227,10 +228,6 @@ public class GameplayScreen implements Screen {
                 if (scoreThisRound > savedHighScore) {
                     Main.prefs.putInteger("highscore", scoreThisRound);
                     Main.prefs.flush();
-                }
-
-                if (scoreThisRound > highScoreThisSession) {
-                    highScoreThisSession = scoreThisRound;
                 }
 
                 Main.previousScreen = Main.ScreenTypes.GAMEPLAY;
@@ -273,7 +270,7 @@ public class GameplayScreen implements Screen {
     private boolean isGameOver(float delta) {
         deathTimer -= delta;
 
-        if(deathTimer < 0){
+        if (deathTimer < 0) {
             deathTimer = 0;
         }
         return deathTimer == 0;
@@ -319,13 +316,6 @@ public class GameplayScreen implements Screen {
     }
 
     private void createPlayerHitbox() {
-//        playerHitBox.set(
-//            playerSprite.getX() + playerSprite.getWidth() / 4f,
-//            playerSprite.getY() + playerSprite.getHeight() / 4f,
-//            playerSprite.getWidth() / 2f,
-//            playerSprite.getHeight() / 2f
-//        );
-
         float playerHitboxSize = 3f;
 
         playerHitBox.set(
@@ -380,7 +370,7 @@ public class GameplayScreen implements Screen {
         playerSprite.draw(spriteBatch);
         startingPlatform.draw(spriteBatch);
 
-        if (initialPause){
+        if (initialPause) {
             promptSprite.draw(spriteBatch);
         }
 
