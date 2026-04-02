@@ -31,6 +31,10 @@ public class MenuScreen implements Screen {
     Array<Texture> titleHighlightTextures = new Array<>();
     Image backgroundImage;
     Image titleImage;
+    Texture cloudOneTexture;
+    Texture cloudTwoTexture;
+    Image cloudOneImage;
+    Image cloudTwoImage;
 
     public MenuScreen(Main parent) {
         this.parent = parent;
@@ -41,13 +45,30 @@ public class MenuScreen implements Screen {
     @Override
     public void show() {
 
-        backgroundTexture = new Texture("game_assets/theme_main_menu/Sky menu.png");
+        // Basic menu background
+        backgroundTexture = new Texture("game_assets/theme_main_menu/Background_menu.png");
         backgroundImage = new Image(backgroundTexture);
         backgroundImage.setSize(stage.getWidth(), stage.getHeight());
         backgroundImage.setY(0f);
         backgroundImage.setX(0f);
         stage.addActor(backgroundImage);
 
+        // Clouds for the background
+        cloudOneTexture = new Texture("game_assets/theme_main_menu/Cloud_1.png");
+        cloudOneImage = new Image(cloudOneTexture);
+        cloudOneImage.setSize((cloudOneTexture.getWidth() * 5), (cloudOneTexture.getHeight() * 5));
+        cloudOneImage.setX(30f);
+        cloudOneImage.setY(stage.getHeight() - (cloudOneTexture.getHeight() * 7f));
+        stage.addActor(cloudOneImage);
+
+        cloudTwoTexture = new Texture("game_assets/theme_main_menu/Cloud_2.png");
+        cloudTwoImage = new Image(cloudTwoTexture);
+        cloudTwoImage.setSize((cloudTwoTexture.getWidth() * 6), (cloudTwoTexture.getHeight() * 6));
+        cloudTwoImage.setX(stage.getWidth() - (cloudOneTexture.getWidth() * 8f));
+        cloudTwoImage.setY(stage.getHeight() - (cloudTwoTexture.getHeight() * 10f));
+        stage.addActor(cloudTwoImage);
+
+        // Title for the menu
         titleTexture = new Texture("game_assets/theme_main_menu/Title_1.png");
         titleImage = new Image(titleTexture);
         titleImage.setSize(titleTexture.getWidth(), titleTexture.getHeight());
