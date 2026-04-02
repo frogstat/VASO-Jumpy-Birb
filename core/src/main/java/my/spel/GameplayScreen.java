@@ -224,10 +224,10 @@ public class GameplayScreen implements Screen {
 
             if (isGameOver(delta)) {
                 parent.stopSound(angelSound);
-                int savedHighScore = Main.prefs.getInteger("highscore", 0);
+                String difficultyString = difficulty.toString();
+                int savedHighScore = Main.prefs.getInteger("highscore_" + difficultyString, 0);
                 if (scoreThisRound > savedHighScore) {
-                    Main.prefs.putInteger("highscore", scoreThisRound);
-                    Main.prefs.flush();
+                    saveHighScore(difficultyString);
                 }
 
                 Main.previousScreen = Main.ScreenTypes.GAMEPLAY;
@@ -237,6 +237,11 @@ public class GameplayScreen implements Screen {
             }
         }
 
+    }
+
+    private void saveHighScore(String difficultyString) {
+        Main.prefs.putInteger("highscore_" + difficultyString, scoreThisRound);
+        Main.prefs.flush();
     }
 
     private void takePlayerToHeaven(float delta) {

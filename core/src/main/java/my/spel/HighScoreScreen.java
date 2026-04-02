@@ -3,11 +3,13 @@ package my.spel;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -24,6 +26,7 @@ public class HighScoreScreen implements Screen {
     private Stage stage;
     private Skin skin;
     Table table;
+    Texture backgroundTexture;
 
     public HighScoreScreen(Main parent) {
         this.parent = parent;
@@ -40,6 +43,8 @@ public class HighScoreScreen implements Screen {
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
 
+        // Background image
+        backgroundTexture = new Texture("game_assets/theme_main_menu/Background_menu.png");
 
         TextButton menuButton = new TextButton("Title Screen", skin);
 
@@ -67,13 +72,24 @@ public class HighScoreScreen implements Screen {
         stage.act(delta);
         spriteBatch.setProjectionMatrix(stage.getCamera().combined); // match stage viewport
         spriteBatch.begin();
+
+        spriteBatch.draw(backgroundTexture, 0, 0, stage.getViewport().getWorldWidth(), stage.getViewport().getWorldHeight());
+
         stage.addActor(table);
 
         GlyphLayout layout = new GlyphLayout();
 
-        String text2 = "Highest Score total: " + Main.prefs.getInteger("highscore", 0);
-        layout.setText(font, text2);
-        font.draw(spriteBatch, text2, (width - layout.width) / 2, (height / 2) - 100);
+        String highscoreHard = "Highest Score Hard: " + Main.prefs.getInteger("highscore_HARD", 0);
+        String highscoreMedium = "Highest Score Medium: " + Main.prefs.getInteger("highscore_MEDIUM", 0);
+        String highscoreEasy = "Highest Score Easy: " + Main.prefs.getInteger("highscore_EASY", 0);
+        layout.setText(font, highscoreHard);
+        font.draw(spriteBatch, highscoreHard, (width - layout.width) / 2, (height / 2) - 100);
+
+        layout.setText(font, highscoreMedium);
+        font.draw(spriteBatch, highscoreMedium, (width - layout.width) / 2, (height / 2));
+
+        layout.setText(font, highscoreEasy);
+        font.draw(spriteBatch, highscoreEasy, (width - layout.width) / 2, (height / 2) + 100);
 
         spriteBatch.end();
         stage.draw();

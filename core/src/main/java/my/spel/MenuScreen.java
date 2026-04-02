@@ -96,7 +96,6 @@ public class MenuScreen implements Screen {
         highScore = new TextButton("High Score", skin);
         exit = new TextButton("Exit", skin);
 
-
         table.add(newGame).fillX().uniformX().padBottom(30);
         table.row().pad(10, 0, 30, 0);
         table.row();

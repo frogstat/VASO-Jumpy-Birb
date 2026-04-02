@@ -89,7 +89,7 @@ public class GameOverScreen implements Screen {
         stage.addActor(table);
         font.draw(spriteBatch, "You scored: " + score, 700, stage.getViewport().getWorldHeight() - 620);
         //font.draw(spriteBatch, "High Score: " + highScore, 755, stage.getViewport().getWorldHeight() - 720);
-        font.draw(spriteBatch, "High Score: " + Main.prefs.getInteger("highscore", 0), 710, stage.getViewport().getWorldHeight() - 720);
+        font.draw(spriteBatch, "High Score: " + Main.prefs.getInteger("highscore_" + GameplayScreen.difficulty.toString(), 0), 710, stage.getViewport().getWorldHeight() - 720);
         font.draw(spriteBatch, "Press space to try again", 510, stage.getViewport().getWorldHeight() - 850);
 
         spriteBatch.end();

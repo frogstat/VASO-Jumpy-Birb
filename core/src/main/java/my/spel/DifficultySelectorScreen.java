@@ -3,8 +3,10 @@ package my.spel;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -21,6 +23,8 @@ public class DifficultySelectorScreen implements Screen {
     TextButton easy;
     TextButton medium;
     TextButton hard;
+    Texture backgroundTexture;
+    Image backgroundImage;
 
     public DifficultySelectorScreen(Main parent) {
         this.parent = parent;
@@ -30,6 +34,15 @@ public class DifficultySelectorScreen implements Screen {
     @Override
     public void show() {
         stage = new Stage(new ScreenViewport());
+
+        // Basic menu background
+        backgroundTexture = new Texture("game_assets/theme_main_menu/Background_menu.png");
+        backgroundImage = new Image(backgroundTexture);
+        backgroundImage.setSize(stage.getWidth(), stage.getHeight());
+        backgroundImage.setY(0f);
+        backgroundImage.setX(0f);
+        stage.addActor(backgroundImage);
+
         Table table = new Table();
         table.setFillParent(true);
         table.padTop(300);
