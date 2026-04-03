@@ -122,5 +122,8 @@ public class DifficultySelectorScreen implements Screen {
 
     @Override
     public void dispose() {
+        stage.dispose();
+        skin.dispose();
+        backgroundTexture.dispose();
     }
 }
