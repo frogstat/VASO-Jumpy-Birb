@@ -56,9 +56,7 @@ public class Main extends Game {
                 setScreen(gameplayScreen);
             }
             case DIFFICULTY_SELECTOR -> {
-                if (difficultySelectorScreen == null) {
-                    difficultySelectorScreen = new DifficultySelectorScreen(this);
-                }
+                difficultySelectorScreen = new DifficultySelectorScreen(this);
                 setScreen(difficultySelectorScreen);
             }
         }
