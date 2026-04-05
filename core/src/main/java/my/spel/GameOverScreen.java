@@ -66,6 +66,7 @@ public class GameOverScreen implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 dispose();
+                parent.stopSound(gameOverSound);
                 parent.goToMenu();
             }
         });
