@@ -89,12 +89,12 @@ public class Main extends Game {
     }
 
     public void playMusic() {
-//        music.setLooping(true);
-//        music.play();
+        music.setLooping(true);
+        music.play();
     }
 
     public void stopMusic() {
-//        music.stop();
+        music.stop();
     }
 
     public void showHighScore() {
