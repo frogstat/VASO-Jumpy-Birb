@@ -86,7 +86,7 @@ public class GameplayScreen implements Screen {
         scoreThisRound = 0;
         uiBatch = new SpriteBatch();
         font = new BitmapFont(Gdx.files.internal("game_assets/uifont.fnt"));
-        font.getData().setScale(1f);
+        font.getData().setScale(0.1f);
         font.setColor(Color.WHITE);
 
         spriteBatch = new SpriteBatch();
@@ -379,31 +379,16 @@ public class GameplayScreen implements Screen {
             promptSprite.draw(spriteBatch);
         }
 
+        createScoreUi(spriteBatch);
         spriteBatch.end();
 
 
-        createScoreUi();
     }
 
-    private void createScoreUi() {
-        uiBatch.begin();
+    private void createScoreUi(SpriteBatch batch) {
         String score = "Score: " + scoreThisRound;
-        float x = 15;
-        float y = Gdx.graphics.getHeight() - 15;
-        float offset = 4f; // Outline thickness
-
-        // Draw black text in all 4 directions
-        font.setColor(Color.BLACK);
-        font.draw(uiBatch, score, x + offset, y);
-        font.draw(uiBatch, score, x - offset, y);
-        font.draw(uiBatch, score, x, y + offset);
-        font.draw(uiBatch, score, x, y - offset);
-
-        // Draw white text on top
         font.setColor(Color.WHITE);
-        font.draw(uiBatch, score, x, y);
-
-        uiBatch.end();
+        font.draw(batch, score, 2, viewport.getWorldHeight() - 2);
     }
 
     @Override
