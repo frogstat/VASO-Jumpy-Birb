@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -30,6 +31,7 @@ public class GameOverScreen implements Screen {
     FitViewport viewport;
     SpriteBatch spriteBatch;
     Texture gameOverTexture;
+    GlyphLayout layout;
     Table table;
     private int score;
     private int highScore;
@@ -39,10 +41,11 @@ public class GameOverScreen implements Screen {
     public GameOverScreen(Main parent, int score) {
         this.parent = parent;
         this.score = score;
+        layout = new GlyphLayout();
         skin = new Skin(Gdx.files.internal(Main.skinPath));
 
         font = new BitmapFont(Gdx.files.internal("game_assets/uifont.fnt"));
-        font.getData().setScale(1f);
+        font.getData().setScale(0.6f);
 
         highScore = Main.prefs.getInteger("highscore", 0);
 
@@ -55,9 +58,8 @@ public class GameOverScreen implements Screen {
 
     @Override
     public void show() {
-        stage = new Stage(new ScreenViewport());
+        stage = new Stage(new FitViewport(1280, 720));
         Gdx.input.setInputProcessor(stage);
-
 
 
         TextButton menuButton = new TextButton("Title Screen", skin);
@@ -76,7 +78,7 @@ public class GameOverScreen implements Screen {
         table.bottom();
         table.row();
         table.add(menuButton).padBottom(30);
-
+        stage.addActor(table);
 
     }
 
@@ -87,11 +89,26 @@ public class GameOverScreen implements Screen {
         spriteBatch.setProjectionMatrix(stage.getCamera().combined); // match stage viewport
         spriteBatch.begin();
         spriteBatch.draw(gameOverTexture, 0, 0, stage.getViewport().getWorldWidth(), stage.getViewport().getWorldHeight());
-        stage.addActor(table);
-        font.draw(spriteBatch, "You scored: " + score, 700, stage.getViewport().getWorldHeight() - 620);
-        //font.draw(spriteBatch, "High Score: " + highScore, 755, stage.getViewport().getWorldHeight() - 720);
-        font.draw(spriteBatch, "High Score: " + Main.prefs.getInteger("highscore_" + GameplayScreen.difficulty.toString(), 0), 710, stage.getViewport().getWorldHeight() - 720);
-        font.draw(spriteBatch, "Press space to try again", 510, stage.getViewport().getWorldHeight() - 850);
+        float centerX = stage.getViewport().getWorldWidth() / 2f;
+        float centerY = stage.getViewport().getWorldHeight() / 2f;
+
+        String scoreText = "You scored: " + score;
+        layout.setText(font, scoreText);
+        font.draw(spriteBatch, scoreText,
+            centerX - layout.width / 2,
+            centerY - 80);
+
+        String highScoreText = "High Score: " + Main.prefs.getInteger("highscore_" + GameplayScreen.difficulty.toString(), 0);
+        layout.setText(font, highScoreText);
+        font.draw(spriteBatch, highScoreText,
+            centerX - layout.width / 2,
+            centerY - 120);
+
+        String retryText = "Press space to try again";
+        layout.setText(font, retryText);
+        font.draw(spriteBatch, retryText,
+            centerX - layout.width / 2,
+            centerY - 160);
 
         spriteBatch.end();
         stage.draw();
