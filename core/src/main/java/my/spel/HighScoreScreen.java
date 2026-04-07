@@ -32,15 +32,15 @@ public class HighScoreScreen implements Screen {
         this.parent = parent;
 
         font = new BitmapFont(Gdx.files.internal("game_assets/uifont.fnt"));
-        font.getData().setScale(1f);
+        font.getData().setScale(0.6f);
         spriteBatch = new SpriteBatch();
-        viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        viewport = new FitViewport(1280, 720);
         skin = new Skin(Gdx.files.internal(Main.skinPath));
     }
 
     @Override
     public void show() {
-        stage = new Stage(new ScreenViewport());
+        stage = new Stage(viewport);
         Gdx.input.setInputProcessor(stage);
 
         // Background image
@@ -79,17 +79,17 @@ public class HighScoreScreen implements Screen {
 
         GlyphLayout layout = new GlyphLayout();
 
-        String highscoreHard = "Highest Score Hard: " + Main.prefs.getInteger("highscore_HARD", 0);
-        String highscoreMedium = "Highest Score Medium: " + Main.prefs.getInteger("highscore_MEDIUM", 0);
-        String highscoreEasy = "Highest Score Easy: " + Main.prefs.getInteger("highscore_EASY", 0);
-        layout.setText(font, highscoreHard);
-        font.draw(spriteBatch, highscoreHard, (width - layout.width) / 2, (height / 2) - 100);
+        String highScoreHard = "Highest Score Hard: " + Main.prefs.getInteger("highscore_HARD", 0);
+        String highScoreMedium = "Highest Score Medium: " + Main.prefs.getInteger("highscore_MEDIUM", 0);
+        String highScoreEasy = "Highest Score Easy: " + Main.prefs.getInteger("highscore_EASY", 0);
+        layout.setText(font, highScoreHard);
+        font.draw(spriteBatch, highScoreHard, (width - layout.width) / 2, (height / 2));
 
-        layout.setText(font, highscoreMedium);
-        font.draw(spriteBatch, highscoreMedium, (width - layout.width) / 2, (height / 2));
+        layout.setText(font, highScoreMedium);
+        font.draw(spriteBatch, highScoreMedium, (width - layout.width) / 2, (height / 2) + 50);
 
-        layout.setText(font, highscoreEasy);
-        font.draw(spriteBatch, highscoreEasy, (width - layout.width) / 2, (height / 2) + 100);
+        layout.setText(font, highScoreEasy);
+        font.draw(spriteBatch, highScoreEasy, (width - layout.width) / 2, (height / 2) + 100);
 
         spriteBatch.end();
         stage.draw();
