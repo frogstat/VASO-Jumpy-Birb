@@ -51,7 +51,6 @@ public class GameplayScreen implements Screen {
     Texture obstacleTexture;
 
     SpriteBatch spriteBatch;
-    SpriteBatch uiBatch;
 
     Sprite playerSprite;
     Sprite startingPlatform;
@@ -84,8 +83,7 @@ public class GameplayScreen implements Screen {
         applyTheme();
 
         scoreThisRound = 0;
-        uiBatch = new SpriteBatch();
-        font = new BitmapFont(Gdx.files.internal("game_assets/uifont.fnt"));
+        font = new BitmapFont(Gdx.files.internal("game_assets/uifont_border.fnt"));
         font.getData().setScale(0.1f);
         font.setColor(Color.WHITE);
 
