@@ -34,7 +34,7 @@ public class HighScoreScreen implements Screen {
         font = new BitmapFont(Gdx.files.internal("game_assets/uifont.fnt"));
         font.getData().setScale(0.6f);
         spriteBatch = new SpriteBatch();
-        viewport = new FitViewport(1280, 720);
+        viewport = new FitViewport(1920, 1080);
         skin = new Skin(Gdx.files.internal(Main.skinPath));
     }
 

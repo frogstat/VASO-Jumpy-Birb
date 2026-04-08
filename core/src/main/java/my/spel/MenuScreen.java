@@ -20,12 +20,11 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 
 public class MenuScreen implements Screen {
 
-    private static final float VIRTUAL_WIDTH = 1920f;
-    private static final float VIRTUAL_HEIGHT = 1080f;
-
     private Main parent;
     private Stage stage;
     private Skin skin;
+
+    FitViewport viewport;
 
     TextButton newGame;
     TextButton highScore;
@@ -48,7 +47,8 @@ public class MenuScreen implements Screen {
 
     public MenuScreen(Main parent) {
         this.parent = parent;
-        stage = new Stage(new FitViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT));
+        viewport = new FitViewport(1920, 1080);
+        stage = new Stage(viewport);
         skin = new Skin(Gdx.files.internal(Main.skinPath));
     }
 
@@ -119,10 +119,10 @@ public class MenuScreen implements Screen {
         });
 
         layout();// initial positioning
-        cloudOneSprite.setY(800);
-        cloudOneSprite.setX(200);
-        cloudTwoSprite.setY(650);
-        cloudTwoSprite.setX(1600);
+        cloudOneSprite.setY(533);
+        cloudOneSprite.setX(128);
+        cloudTwoSprite.setY(433);
+        cloudTwoSprite.setX(1066);
     }
 
     private void layout() {
@@ -148,21 +148,23 @@ public class MenuScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        if(cloudOneSprite.getX() > VIRTUAL_WIDTH){
+        if(cloudOneSprite.getX() > viewport.getWorldWidth()){
             cloudOneSprite.setX(0 - cloudOneSprite.getWidth());
         }
-        if(cloudTwoSprite.getX() > VIRTUAL_WIDTH){
+        if(cloudTwoSprite.getX() > viewport.getWorldWidth()){
             cloudTwoSprite.setX(0 - cloudTwoSprite.getWidth());
         }
 
 
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         spriteBatch.begin();
-        spriteBatch.draw(backgroundTexture,0,0,VIRTUAL_WIDTH,VIRTUAL_HEIGHT);
+
+        stage.act(delta);
+        spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
+        spriteBatch.draw(backgroundTexture,0,0,viewport.getWorldWidth(),viewport.getWorldHeight());
         cloudOneSprite.draw(spriteBatch);
         cloudTwoSprite.draw(spriteBatch);
         spriteBatch.end();
-        stage.act(delta);
         stage.draw();
 
         cloudOneSprite.translateX(40f * delta);
@@ -176,14 +178,10 @@ public class MenuScreen implements Screen {
         }
     }
 
-    public void cloudMovement() {
-
-    }
 
     @Override
     public void resize(int width, int height) {
         stage.getViewport().update(width, height, true);
-        layout(); // recompute positions after resize
     }
 
     @Override

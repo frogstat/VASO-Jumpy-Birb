@@ -58,7 +58,7 @@ public class GameOverScreen implements Screen {
 
     @Override
     public void show() {
-        stage = new Stage(new FitViewport(1280, 720));
+        stage = new Stage(new FitViewport(1920, 1080));
         Gdx.input.setInputProcessor(stage);
 
 

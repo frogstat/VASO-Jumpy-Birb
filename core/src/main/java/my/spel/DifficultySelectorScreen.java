@@ -35,7 +35,7 @@ public class DifficultySelectorScreen implements Screen {
 
     @Override
     public void show() {
-        stage = new Stage(new FitViewport(1280,720));
+        stage = new Stage(new FitViewport(1920,1080));
 
         // Basic menu background
         backgroundTexture = new Texture("game_assets/main_menu/Background_menu.png");
