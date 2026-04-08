@@ -55,25 +55,25 @@ public class MenuScreen implements Screen {
     @Override
     public void show() {
 
-        backgroundTexture = new Texture("game_assets/theme_main_menu/Background_menu.png");
+        backgroundTexture = new Texture("game_assets/main_menu/Background_menu.png");
         backgroundImage = new Image(backgroundTexture);
         stage.addActor(backgroundImage);
 
-        cloudOneTexture = new Texture("game_assets/theme_main_menu/Cloud_1.png");
+        cloudOneTexture = new Texture("game_assets/main_menu/Cloud_1.png");
         cloudOneImage = new Image(cloudOneTexture);
         stage.addActor(cloudOneImage);
 
-        cloudTwoTexture = new Texture("game_assets/theme_main_menu/Cloud_2.png");
+        cloudTwoTexture = new Texture("game_assets/main_menu/Cloud_2.png");
         cloudTwoImage = new Image(cloudTwoTexture);
         stage.addActor(cloudTwoImage);
 
-        titleTexture = new Texture("game_assets/theme_main_menu/Title_1.png");
+        titleTexture = new Texture("game_assets/main_menu/Title_1.png");
         titleImage = new Image(titleTexture);
         stage.addActor(titleImage);
 
         for (int i = 0; i < 26; i++) {
             titleHighlightTextures.add(new Texture(
-                "game_assets/theme_main_menu/Title_highlight_" + i + ".png"
+                "game_assets/main_menu/Title_highlight_" + i + ".png"
             ));
         }
 

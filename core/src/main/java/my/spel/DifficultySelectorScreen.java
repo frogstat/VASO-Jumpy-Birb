@@ -38,7 +38,7 @@ public class DifficultySelectorScreen implements Screen {
         stage = new Stage(new FitViewport(1280,720));
 
         // Basic menu background
-        backgroundTexture = new Texture("game_assets/theme_main_menu/Background_menu.png");
+        backgroundTexture = new Texture("game_assets/main_menu/Background_menu.png");
         backgroundImage = new Image(backgroundTexture);
         backgroundImage.setSize(stage.getWidth(), stage.getHeight());
         backgroundImage.setY(0f);

@@ -44,7 +44,7 @@ public class HighScoreScreen implements Screen {
         Gdx.input.setInputProcessor(stage);
 
         // Background image
-        backgroundTexture = new Texture("game_assets/theme_main_menu/Background_menu.png");
+        backgroundTexture = new Texture("game_assets/main_menu/Background_menu.png");
 
         TextButton menuButton = new TextButton("Title Screen", skin);
 
