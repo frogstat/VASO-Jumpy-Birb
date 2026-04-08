@@ -55,7 +55,7 @@ public class MenuScreen implements Screen {
     @Override
     public void show() {
 
-        backgroundTexture = new Texture("game_assets/main_menu/Background_menu.png");
+        backgroundTexture = new Texture("game_assets/main_menu/background_menu.png");
         cloudOneTexture = new Texture("game_assets/main_menu/Cloud_1.png");
         cloudTwoTexture = new Texture("game_assets/main_menu/Cloud_2.png");
         titleTexture = new Texture("game_assets/main_menu/Title_1.png");
@@ -119,10 +119,10 @@ public class MenuScreen implements Screen {
         });
 
         layout();// initial positioning
-        cloudOneSprite.setY(533);
+        cloudOneSprite.setY(800);
         cloudOneSprite.setX(128);
-        cloudTwoSprite.setY(433);
-        cloudTwoSprite.setX(1066);
+        cloudTwoSprite.setY(720);
+        cloudTwoSprite.setX(1400);
     }
 
     private void layout() {

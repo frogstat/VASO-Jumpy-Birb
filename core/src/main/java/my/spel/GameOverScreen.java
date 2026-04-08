@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -36,6 +37,7 @@ public class GameOverScreen implements Screen {
     private int score;
     private int highScore;
 
+    Sprite playerSprite;
     BitmapFont font;
 
     public GameOverScreen(Main parent, int score) {
@@ -49,18 +51,23 @@ public class GameOverScreen implements Screen {
 
         highScore = Main.prefs.getInteger("highscore", 0);
 
-        gameOverTexture = new Texture("game_assets/game_over.png");
+        gameOverTexture = new Texture("game_assets/main_menu/background_menu.png");
         gameOverSound = Gdx.audio.newSound(Gdx.files.internal("game_assets/game_over_sound.mp3"));
         parent.playSound(gameOverSound);
         spriteBatch = new SpriteBatch();
-        viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        viewport = new FitViewport(1920, 1080);
     }
 
     @Override
     public void show() {
-        stage = new Stage(new FitViewport(1920, 1080));
+        stage = new Stage(viewport);
         Gdx.input.setInputProcessor(stage);
 
+        playerSprite = parent.gameplayScreen.playerSprite;
+        playerSprite.setScale(25);
+        playerSprite.setOriginCenter();
+        playerSprite.setY(viewport.getWorldHeight() - viewport.getWorldHeight() / 6);
+        playerSprite.setX(viewport.getWorldWidth() / 2);
 
         TextButton menuButton = new TextButton("Title Screen", skin);
 
@@ -96,19 +103,21 @@ public class GameOverScreen implements Screen {
         layout.setText(font, scoreText);
         font.draw(spriteBatch, scoreText,
             centerX - layout.width / 2,
-            centerY - 80);
+            centerY);
 
         String highScoreText = "High Score: " + Main.prefs.getInteger("highscore_" + GameplayScreen.difficulty.toString(), 0);
         layout.setText(font, highScoreText);
         font.draw(spriteBatch, highScoreText,
             centerX - layout.width / 2,
-            centerY - 170);
+            centerY - 90);
 
         String retryText = "Press space to try again";
         layout.setText(font, retryText);
         font.draw(spriteBatch, retryText,
             centerX - layout.width / 2,
             centerY - 330);
+
+        playerSprite.draw(spriteBatch);
 
         spriteBatch.end();
         stage.draw();
