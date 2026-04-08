@@ -45,7 +45,7 @@ public class GameOverScreen implements Screen {
         skin = new Skin(Gdx.files.internal(Main.skinPath));
 
         font = new BitmapFont(Gdx.files.internal("game_assets/uifont.fnt"));
-        font.getData().setScale(0.6f);
+        font.getData().setScale(0.9f);
 
         highScore = Main.prefs.getInteger("highscore", 0);
 
@@ -102,13 +102,13 @@ public class GameOverScreen implements Screen {
         layout.setText(font, highScoreText);
         font.draw(spriteBatch, highScoreText,
             centerX - layout.width / 2,
-            centerY - 120);
+            centerY - 170);
 
         String retryText = "Press space to try again";
         layout.setText(font, retryText);
         font.draw(spriteBatch, retryText,
             centerX - layout.width / 2,
-            centerY - 160);
+            centerY - 330);
 
         spriteBatch.end();
         stage.draw();

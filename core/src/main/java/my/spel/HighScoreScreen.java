@@ -32,7 +32,7 @@ public class HighScoreScreen implements Screen {
         this.parent = parent;
 
         font = new BitmapFont(Gdx.files.internal("game_assets/uifont.fnt"));
-        font.getData().setScale(0.6f);
+        font.getData().setScale(1f);
         spriteBatch = new SpriteBatch();
         viewport = new FitViewport(1920, 1080);
         skin = new Skin(Gdx.files.internal(Main.skinPath));
@@ -86,10 +86,10 @@ public class HighScoreScreen implements Screen {
         font.draw(spriteBatch, highScoreHard, (width - layout.width) / 2, (height / 2));
 
         layout.setText(font, highScoreMedium);
-        font.draw(spriteBatch, highScoreMedium, (width - layout.width) / 2, (height / 2) + 50);
+        font.draw(spriteBatch, highScoreMedium, (width - layout.width) / 2, (height / 2) + 90);
 
         layout.setText(font, highScoreEasy);
-        font.draw(spriteBatch, highScoreEasy, (width - layout.width) / 2, (height / 2) + 100);
+        font.draw(spriteBatch, highScoreEasy, (width - layout.width) / 2, (height / 2) + 180);
 
         spriteBatch.end();
         stage.draw();
