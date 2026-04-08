@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
-public class AnimationActor extends Actor {
+public class HighlightAnimationActor extends Actor {
     private final Animation<Texture> animation;
     private float elapsedTime;
     private final float pauseTimeSeconds;
@@ -14,7 +14,7 @@ public class AnimationActor extends Actor {
     private final float x;
     private final float y;
 
-    public AnimationActor(Animation<Texture> animation, float pauseTimeSeconds, float x, float y) {
+    public HighlightAnimationActor(Animation<Texture> animation, float pauseTimeSeconds, float x, float y) {
         this.animation = animation;
         this.pauseTimeSeconds = pauseTimeSeconds;
         animationPaused = false;

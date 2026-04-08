@@ -6,6 +6,8 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -15,7 +17,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class MenuScreen implements Screen {
 
@@ -30,20 +31,19 @@ public class MenuScreen implements Screen {
     TextButton highScore;
     TextButton exit;
 
-
     Texture backgroundTexture;
     Texture titleTexture;
     Array<Texture> titleHighlightTextures = new Array<>();
 
-    Image backgroundImage;
     Image titleImage;
 
     Texture cloudOneTexture;
     Texture cloudTwoTexture;
-    Image cloudOneImage;
-    Image cloudTwoImage;
+    Sprite cloudOneSprite;
+    Sprite cloudTwoSprite;
+    SpriteBatch spriteBatch;
 
-    AnimationActor animationActor;
+    HighlightAnimationActor highlightAnimationActor;
     Animation<Texture> highlightAnimation;
 
     public MenuScreen(Main parent) {
@@ -56,17 +56,8 @@ public class MenuScreen implements Screen {
     public void show() {
 
         backgroundTexture = new Texture("game_assets/main_menu/Background_menu.png");
-        backgroundImage = new Image(backgroundTexture);
-        stage.addActor(backgroundImage);
-
         cloudOneTexture = new Texture("game_assets/main_menu/Cloud_1.png");
-        cloudOneImage = new Image(cloudOneTexture);
-        stage.addActor(cloudOneImage);
-
         cloudTwoTexture = new Texture("game_assets/main_menu/Cloud_2.png");
-        cloudTwoImage = new Image(cloudTwoTexture);
-        stage.addActor(cloudTwoImage);
-
         titleTexture = new Texture("game_assets/main_menu/Title_1.png");
         titleImage = new Image(titleTexture);
         stage.addActor(titleImage);
@@ -79,6 +70,13 @@ public class MenuScreen implements Screen {
 
         highlightAnimation = new Animation<>(1 / 70f, titleHighlightTextures);
 
+        // Cloud sprites
+        spriteBatch = new SpriteBatch();
+        cloudOneSprite = new Sprite(cloudOneTexture);
+        cloudOneSprite.setSize(cloudOneTexture.getWidth() * 6f, cloudOneTexture.getHeight() * 6);
+
+        cloudTwoSprite = new Sprite(cloudTwoTexture);
+        cloudTwoSprite.setSize(cloudTwoTexture.getWidth() * 6f, cloudTwoTexture.getHeight() * 6f);
 
         Table table = new Table();
         table.setFillParent(true);
@@ -120,29 +118,17 @@ public class MenuScreen implements Screen {
             }
         });
 
-        layout(); // initial positioning
+        layout();// initial positioning
+        cloudOneSprite.setY(800);
+        cloudOneSprite.setX(200);
+        cloudTwoSprite.setY(650);
+        cloudTwoSprite.setX(1600);
     }
 
     private void layout() {
         float width = stage.getViewport().getWorldWidth();
         float height = stage.getViewport().getWorldHeight();
 
-        backgroundImage.setSize(width, height);
-        backgroundImage.setPosition(0, 0);
-
-        cloudOneImage.setSize(cloudOneTexture.getWidth() * 5f,
-            cloudOneTexture.getHeight() * 5f);
-        cloudOneImage.setPosition(
-            width * 0.02f,
-            height - cloudOneImage.getHeight() * 1.4f
-        );
-
-        cloudTwoImage.setSize(cloudTwoTexture.getWidth() * 6f,
-            cloudTwoTexture.getHeight() * 6f);
-        cloudTwoImage.setPosition(
-            width - cloudTwoImage.getWidth() * 1.2f,
-            height - cloudTwoImage.getHeight() * 1.6f
-        );
 
         titleImage.setSize(titleTexture.getWidth(), titleTexture.getHeight());
         titleImage.setPosition(
@@ -151,25 +137,47 @@ public class MenuScreen implements Screen {
         );
 
 
-        if (animationActor == null) {
-            animationActor = new AnimationActor(highlightAnimation, 4,
+        if (highlightAnimationActor == null) {
+            highlightAnimationActor = new HighlightAnimationActor(highlightAnimation, 4,
                 titleImage.getX(), titleImage.getY());
-            stage.addActor(animationActor);
+            stage.addActor(highlightAnimationActor);
         } else {
-            animationActor.setPosition(titleImage.getX(), titleImage.getY());
+            highlightAnimationActor.setPosition(titleImage.getX(), titleImage.getY());
         }
     }
 
     @Override
     public void render(float delta) {
+        if(cloudOneSprite.getX() > VIRTUAL_WIDTH){
+            cloudOneSprite.setX(0 - cloudOneSprite.getWidth());
+        }
+        if(cloudTwoSprite.getX() > VIRTUAL_WIDTH){
+            cloudTwoSprite.setX(0 - cloudTwoSprite.getWidth());
+        }
+
+
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        spriteBatch.begin();
+        spriteBatch.draw(backgroundTexture,0,0,VIRTUAL_WIDTH,VIRTUAL_HEIGHT);
+        cloudOneSprite.draw(spriteBatch);
+        cloudTwoSprite.draw(spriteBatch);
+        spriteBatch.end();
         stage.act(delta);
         stage.draw();
+
+        cloudOneSprite.translateX(40f * delta);
+        cloudTwoSprite.translateX(40f * delta);
+
+
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             dispose();
             parent.changeScreen(Main.ScreenTypes.DIFFICULTY_SELECTOR);
         }
+    }
+
+    public void cloudMovement() {
+
     }
 
     @Override
