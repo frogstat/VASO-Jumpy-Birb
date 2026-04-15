@@ -38,6 +38,7 @@ public class GameplayScreen implements Screen {
     private final float gravityConstant;
     private float playerSpeedY;
     private final float jumpSpeed;
+    boolean showFlame;
 
     FitViewport viewport;
 
@@ -49,12 +50,14 @@ public class GameplayScreen implements Screen {
     Texture startingPlatformTexture;
     Texture promptTexture;
     Texture obstacleTexture;
+    Texture flameTexture;
 
     SpriteBatch spriteBatch;
 
     Sprite playerSprite;
     Sprite startingPlatform;
     Sprite promptSprite;
+    Sprite flameSprite;
 
     Circle playerHitBox;
     ShapeRenderer shapeRenderer;
@@ -73,6 +76,7 @@ public class GameplayScreen implements Screen {
     public static float pauseTimer = 0;
     private float deathTimer;
     private boolean deathTimerIsReset;
+    float flameFlipTimer;
 
     BitmapFont font;
 
@@ -123,6 +127,9 @@ public class GameplayScreen implements Screen {
         shapeRenderer = new ShapeRenderer();
         deathTimer = 2f;
         deathTimerIsReset = false;
+        flameSprite = new Sprite(flameTexture);
+        flameFlipTimer = 0.05f;
+        showFlame = false;
     }
 
     public void createNewObstacle() {
@@ -188,6 +195,7 @@ public class GameplayScreen implements Screen {
         startingPlatformTexture = new Texture(assetsRoot + theme + "/platform.png");
         promptTexture = new Texture(assetsRoot + theme + "/prompt.png");
         obstacleTexture = new Texture(assetsRoot + theme + "/obstacle.png");
+        flameTexture = new Texture(assetsRoot + "theme_hard/flames.png");
 
     }
 
@@ -224,7 +232,7 @@ public class GameplayScreen implements Screen {
                 deathTimer -= delta;
                 takePlayerToHeaven(delta);
             } else {
-                deathTimer -= delta*2;
+                deathTimer -= delta * 2;
                 if (!deathTimerIsReset) {
                     takePlayerToHeaven(delta);
                     if (deathTimer <= 0) {
@@ -232,6 +240,9 @@ public class GameplayScreen implements Screen {
                     }
                 } else {
                     movePlayerGravity(delta);
+                }
+                if (playerSprite.getY() <= 0) {
+                    showFlame = true;
                 }
 
             }
@@ -244,7 +255,7 @@ public class GameplayScreen implements Screen {
                     saveHighScore(difficultyString);
                 }
 
-                playerSprite.setRotation(theme.equals("theme_dark") ? 180 : 0);
+                playerSprite.setRotation(theme.equals("theme_hard") ? 180 : 0);
 
                 Main.previousScreen = Main.ScreenTypes.GAMEPLAY;
                 dispose();
@@ -394,6 +405,18 @@ public class GameplayScreen implements Screen {
 
         playerSprite.draw(spriteBatch);
         startingPlatform.draw(spriteBatch);
+
+        if (showFlame) {
+            flameFlipTimer -= delta;
+            if (flameFlipTimer <= 0) {
+                flameSprite.flip(true, false);
+                flameFlipTimer = 0.05f;
+            }
+            flameSprite.setSize(15, 22);
+            flameSprite.setY(0);
+            flameSprite.setX(playerSprite.getX());
+            flameSprite.draw(spriteBatch);
+        }
 
         if (initialPause) {
             promptSprite.draw(spriteBatch);
