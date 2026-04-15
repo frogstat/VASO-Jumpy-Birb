@@ -201,7 +201,9 @@ public class GameplayScreen implements Screen {
 
     private void input() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) || Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
-            initialPause = false;
+            if(initialPause){
+                initialPause = false;
+            }
             playerSpeedY = jumpSpeed;
             parent.playSound(whoopSound);
         }
@@ -245,6 +247,10 @@ public class GameplayScreen implements Screen {
                     showFlame = true;
                 }
 
+            }
+
+            if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
+                deathTimer = 0;
             }
 
             if (isGameOver(delta)) {
