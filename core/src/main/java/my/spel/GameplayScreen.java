@@ -72,6 +72,7 @@ public class GameplayScreen implements Screen {
 
     public static float pauseTimer = 0;
     private float deathTimer;
+    private boolean deathTimerIsReset;
 
     BitmapFont font;
 
@@ -121,6 +122,7 @@ public class GameplayScreen implements Screen {
         createPlayerHitbox();
         shapeRenderer = new ShapeRenderer();
         deathTimer = 2f;
+        deathTimerIsReset = false;
     }
 
     public void createNewObstacle() {
@@ -218,7 +220,21 @@ public class GameplayScreen implements Screen {
                 killPlayer();
             }
         } else {
-            takePlayerToHeaven(delta);
+            if (theme.equals("theme_normal")) {
+                deathTimer -= delta;
+                takePlayerToHeaven(delta);
+            } else {
+                deathTimer -= delta*2;
+                if (!deathTimerIsReset) {
+                    takePlayerToHeaven(delta);
+                    if (deathTimer <= 0) {
+                        resetDeathTimer();
+                    }
+                } else {
+                    movePlayerGravity(delta);
+                }
+
+            }
 
             if (isGameOver(delta)) {
                 parent.stopSound(angelSound);
@@ -228,6 +244,8 @@ public class GameplayScreen implements Screen {
                     saveHighScore(difficultyString);
                 }
 
+                playerSprite.setRotation(theme.equals("theme_dark") ? 180 : 0);
+
                 Main.previousScreen = Main.ScreenTypes.GAMEPLAY;
                 dispose();
                 parent.stopMusic();
@@ -236,6 +254,7 @@ public class GameplayScreen implements Screen {
         }
 
     }
+
 
     private void saveHighScore(String difficultyString) {
         Main.prefs.putInteger("highscore_" + difficultyString, scoreThisRound);
@@ -270,9 +289,12 @@ public class GameplayScreen implements Screen {
         parent.playSound(angelSound);
     }
 
-    private boolean isGameOver(float delta) {
-        deathTimer -= delta;
+    private void resetDeathTimer() {
+        deathTimer = 4f;
+        deathTimerIsReset = true;
+    }
 
+    private boolean isGameOver(float delta) {
         if (deathTimer < 0) {
             deathTimer = 0;
         }
