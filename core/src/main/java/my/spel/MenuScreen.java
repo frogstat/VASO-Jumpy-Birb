@@ -82,6 +82,9 @@ public class MenuScreen implements Screen {
         table.setFillParent(true);
         stage.addActor(table);
 
+        TextButton.TextButtonStyle style = new TextButton.TextButtonStyle(skin.get(TextButton.TextButtonStyle.class));
+        style.font.getData().setScale(0.7f);
+
         newGame = new TextButton("Start", skin);
         highScore = new TextButton("High Score", skin);
         exit = new TextButton("Exit", skin);

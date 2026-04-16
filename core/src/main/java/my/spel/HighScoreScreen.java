@@ -46,6 +46,9 @@ public class HighScoreScreen implements Screen {
         // Background image
         backgroundTexture = new Texture("game_assets/main_menu/background_menu.png");
 
+        TextButton.TextButtonStyle style = new TextButton.TextButtonStyle(skin.get(TextButton.TextButtonStyle.class));
+        style.font.getData().setScale(0.7f);
+
         TextButton menuButton = new TextButton("Title Screen", skin);
 
         menuButton.addListener(new ChangeListener() {

@@ -69,6 +69,9 @@ public class GameOverScreen implements Screen {
         playerSprite.setY(viewport.getWorldHeight() - viewport.getWorldHeight() / 5);
         playerSprite.setX(viewport.getWorldWidth() / 2);
 
+        TextButton.TextButtonStyle style = new TextButton.TextButtonStyle(skin.get(TextButton.TextButtonStyle.class));
+        style.font.getData().setScale(0.7f);
+
         TextButton menuButton = new TextButton("Title Screen", skin);
 
         menuButton.addListener(new ChangeListener() {

@@ -50,6 +50,9 @@ public class DifficultySelectorScreen implements Screen {
         table.padTop(300);
         stage.addActor(table);
 
+        TextButton.TextButtonStyle style = new TextButton.TextButtonStyle(skin.get(TextButton.TextButtonStyle.class));
+        style.font.getData().setScale(0.7f);
+
         easy = new TextButton("Easy", skin);
         medium = new TextButton("Medium", skin);
         hard = new TextButton("Hard", skin);
