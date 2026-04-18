@@ -62,11 +62,13 @@ public class Main extends Game {
         }
     }
 
-    public void newGame() {
+    public void newGame(boolean newMusic) {
         gameplayScreen = new GameplayScreen(this);
-        music.stop();
-        music = Gdx.audio.newMusic(Gdx.files.internal("game_assets/" + gameplayScreen.theme + "/music.mp3"));
-        playMusic();
+        if (newMusic){
+            music.stop();
+            music = Gdx.audio.newMusic(Gdx.files.internal("game_assets/" + gameplayScreen.theme + "/music.mp3"));
+            playMusic();
+        }
         changeScreen(ScreenTypes.GAMEPLAY);
     }
 

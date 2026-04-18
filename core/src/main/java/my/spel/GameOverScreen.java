@@ -53,7 +53,7 @@ public class GameOverScreen implements Screen {
 
         gameOverTexture = new Texture("game_assets/main_menu/background_menu.png");
         gameOverSound = Gdx.audio.newSound(Gdx.files.internal("game_assets/game_over_sound.mp3"));
-        parent.playSound(gameOverSound);
+//        parent.playSound(gameOverSound);
         spriteBatch = new SpriteBatch();
         viewport = new FitViewport(1920, 1080);
     }
@@ -78,7 +78,7 @@ public class GameOverScreen implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 dispose();
-                parent.stopSound(gameOverSound);
+//                parent.stopSound(gameOverSound);
                 parent.goToMenu();
             }
         });
@@ -127,8 +127,8 @@ public class GameOverScreen implements Screen {
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             dispose();
-            parent.newGame();
-            parent.stopSound(gameOverSound);
+            parent.newGame(false);
+//            parent.stopSound(gameOverSound);
         }
     }
 

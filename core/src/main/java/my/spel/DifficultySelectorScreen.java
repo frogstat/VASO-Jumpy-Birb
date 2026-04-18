@@ -94,7 +94,7 @@ public class DifficultySelectorScreen implements Screen {
     public void startGame(GameplayScreen.Difficulty difficulty) {
         parent.stopMusic();
         GameplayScreen.difficulty = difficulty;
-        parent.newGame();
+        parent.newGame(true);
     }
 
     @Override

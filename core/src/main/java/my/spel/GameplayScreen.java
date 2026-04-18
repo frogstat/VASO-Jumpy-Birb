@@ -265,7 +265,7 @@ public class GameplayScreen implements Screen {
 
                 Main.previousScreen = Main.ScreenTypes.GAMEPLAY;
                 dispose();
-                parent.stopMusic();
+//                parent.stopMusic();
                 parent.goToGameOver(scoreThisRound);
             }
         }
