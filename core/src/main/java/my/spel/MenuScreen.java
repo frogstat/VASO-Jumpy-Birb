@@ -151,10 +151,10 @@ public class MenuScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        if(cloudOneSprite.getX() > viewport.getWorldWidth()){
+        if (cloudOneSprite.getX() > viewport.getWorldWidth()) {
             cloudOneSprite.setX(0 - cloudOneSprite.getWidth());
         }
-        if(cloudTwoSprite.getX() > viewport.getWorldWidth()){
+        if (cloudTwoSprite.getX() > viewport.getWorldWidth()) {
             cloudTwoSprite.setX(0 - cloudTwoSprite.getWidth());
         }
 
@@ -164,7 +164,7 @@ public class MenuScreen implements Screen {
 
         stage.act(delta);
         spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
-        spriteBatch.draw(backgroundTexture,0,0,viewport.getWorldWidth(),viewport.getWorldHeight());
+        spriteBatch.draw(backgroundTexture, 0, 0, viewport.getWorldWidth(), viewport.getWorldHeight());
         cloudOneSprite.draw(spriteBatch);
         cloudTwoSprite.draw(spriteBatch);
         spriteBatch.end();
@@ -174,10 +174,11 @@ public class MenuScreen implements Screen {
         cloudTwoSprite.translateX(40f * delta);
 
 
-
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             dispose();
-            parent.changeScreen(Main.ScreenTypes.DIFFICULTY_SELECTOR);
+            parent.stopMusic();
+            GameplayScreen.difficulty = GameplayScreen.Difficulty.MEDIUM;
+            parent.newGame(true);
         }
     }
 

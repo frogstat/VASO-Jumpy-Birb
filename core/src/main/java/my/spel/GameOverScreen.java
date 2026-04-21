@@ -37,6 +37,8 @@ public class GameOverScreen implements Screen {
     private int score;
     private int highScore;
 
+    public static boolean skipGameOver = false;
+
     Sprite playerSprite;
     BitmapFont font;
 
@@ -94,6 +96,13 @@ public class GameOverScreen implements Screen {
 
     @Override
     public void render(float delta) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) || skipGameOver) {
+            dispose();
+            skipGameOver = false;
+            parent.newGame(false);
+//            parent.stopSound(gameOverSound);
+        }
+
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act(delta);
         spriteBatch.setProjectionMatrix(stage.getCamera().combined); // match stage viewport
@@ -125,11 +134,7 @@ public class GameOverScreen implements Screen {
         spriteBatch.end();
         stage.draw();
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-            dispose();
-            parent.newGame(false);
-//            parent.stopSound(gameOverSound);
-        }
+
     }
 
     @Override

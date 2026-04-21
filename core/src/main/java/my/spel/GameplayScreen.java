@@ -251,6 +251,7 @@ public class GameplayScreen implements Screen {
 
             if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
                 deathTimer = 0;
+                GameOverScreen.skipGameOver = true;
             }
 
             if (isGameOver(delta)) {
