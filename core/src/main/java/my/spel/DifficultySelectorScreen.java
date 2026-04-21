@@ -63,7 +63,25 @@ public class DifficultySelectorScreen implements Screen {
         table.pad(0, 30, 0, 30);
         table.add(hard);
 
+        Table bottomTable = new Table();
+        bottomTable.setFillParent(true);
+        bottomTable.bottom(); // anchor to bottom
+        bottomTable.padBottom(30); // distance from bottom edge
+        stage.addActor(bottomTable);
+
+        TextButton menuButton = new TextButton("Title Screen", skin);
+        bottomTable.add(menuButton).center();
+
         Gdx.input.setInputProcessor(stage);
+
+        menuButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                Main.previousScreen = Main.ScreenTypes.HIGH_SCORE;
+                dispose();
+                parent.goToMenu();
+            }
+        });
 
         easy.addListener(new ChangeListener() {
             @Override
