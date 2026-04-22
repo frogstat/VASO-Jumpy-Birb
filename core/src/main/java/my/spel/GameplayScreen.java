@@ -79,6 +79,8 @@ public class GameplayScreen implements Screen {
     private boolean deathTimerIsReset;
     float flameFlipTimer;
 
+
+    float skipDelayTimer;
     BitmapFont font;
 
     public GameplayScreen(Main parent) {
@@ -132,6 +134,7 @@ public class GameplayScreen implements Screen {
         flameFlipTimer = 0.05f;
         showFlame = false;
         skipGameOver = false;
+        skipDelayTimer = 0.5f;
     }
 
     public void createNewObstacle() {
@@ -232,6 +235,7 @@ public class GameplayScreen implements Screen {
                 killPlayer();
             }
         } else {
+            skipDelayTimer -= delta;
             if (theme.equals("theme_normal")) {
                 deathTimer -= delta;
                 takePlayerToHeaven(delta);
@@ -251,7 +255,7 @@ public class GameplayScreen implements Screen {
 
             }
 
-            if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+            if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && skipDelayTimer <= 0) {
                 deathTimer = 0;
                 skipGameOver = true;
             }

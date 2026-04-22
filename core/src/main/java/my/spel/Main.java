@@ -90,6 +90,10 @@ public class Main extends Game {
         setScreen(new GameOverScreen(this, score));
     }
 
+    public void goToCredits(){
+        setScreen(new CreditsScreen(this));
+    }
+
     public void playMusic() {
         music.setLooping(true);
         music.play();

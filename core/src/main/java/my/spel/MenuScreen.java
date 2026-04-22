@@ -28,6 +28,7 @@ public class MenuScreen implements Screen {
 
     TextButton newGame;
     TextButton highScore;
+    TextButton credits;
     TextButton exit;
 
     Texture backgroundTexture;
@@ -87,12 +88,15 @@ public class MenuScreen implements Screen {
 
         newGame = new TextButton("Start", skin);
         highScore = new TextButton("High Score", skin);
+        credits = new TextButton("Credits", skin);
         exit = new TextButton("Exit", skin);
 
         table.padTop(300);
         table.add(newGame).fillX().uniformX().padBottom(30);
         table.row();
         table.add(highScore).fillX().uniformX().padBottom(30);
+        table.row();
+        table.add(credits).fillX().uniformX().padBottom(30);
         table.row();
         table.add(exit).fillX().uniformX();
 
@@ -103,6 +107,14 @@ public class MenuScreen implements Screen {
             public void changed(ChangeEvent event, Actor actor) {
                 dispose();
                 parent.changeScreen(Main.ScreenTypes.DIFFICULTY_SELECTOR);
+            }
+        });
+
+        credits.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                dispose();
+                parent.goToCredits();
             }
         });
 
