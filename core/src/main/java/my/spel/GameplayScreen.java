@@ -39,6 +39,7 @@ public class GameplayScreen implements Screen {
     private float playerSpeedY;
     private final float jumpSpeed;
     boolean showFlame;
+    boolean skipGameOver;
 
     FitViewport viewport;
 
@@ -130,6 +131,7 @@ public class GameplayScreen implements Screen {
         flameSprite = new Sprite(flameTexture);
         flameFlipTimer = 0.05f;
         showFlame = false;
+        skipGameOver = false;
     }
 
     public void createNewObstacle() {
@@ -201,7 +203,7 @@ public class GameplayScreen implements Screen {
 
     private void input() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) || Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
-            if(initialPause){
+            if (initialPause) {
                 initialPause = false;
             }
             playerSpeedY = jumpSpeed;
@@ -249,9 +251,9 @@ public class GameplayScreen implements Screen {
 
             }
 
-            if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
+            if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
                 deathTimer = 0;
-                GameOverScreen.skipGameOver = true;
+                skipGameOver = true;
             }
 
             if (isGameOver(delta)) {
@@ -266,8 +268,11 @@ public class GameplayScreen implements Screen {
 
                 Main.previousScreen = Main.ScreenTypes.GAMEPLAY;
                 dispose();
-//                parent.stopMusic();
-                parent.goToGameOver(scoreThisRound);
+                if (skipGameOver) {
+                    parent.newGame(false);
+                } else {
+                    parent.goToGameOver(scoreThisRound);
+                }
             }
         }
 
