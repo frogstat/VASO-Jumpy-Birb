@@ -86,8 +86,8 @@ public class Main extends Game {
         changeScreen(ScreenTypes.MAIN_MENU);
     }
 
-    public void goToGameOver(int score) {
-        setScreen(new GameOverScreen(this, score));
+    public void goToGameOver(int score, GameplayScreen.Difficulty difficulty, boolean isNewHighScore) {
+        setScreen(new GameOverScreen(this, score, difficulty, isNewHighScore));
     }
 
     public void playMusic() {

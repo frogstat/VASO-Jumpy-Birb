@@ -82,9 +82,9 @@ public class HighScoreScreen implements Screen {
 
         GlyphLayout layout = new GlyphLayout();
 
-        String highScoreHard = "Highest Score Hard: " + Main.prefs.getInteger("highscore_HARD", 0);
-        String highScoreMedium = "Highest Score Medium: " + Main.prefs.getInteger("highscore_MEDIUM", 0);
-        String highScoreEasy = "Highest Score Easy: " + Main.prefs.getInteger("highscore_EASY", 0);
+        String highScoreEasy = "Highest Score Easy: " + Main.prefs.getInteger("highscore_EASY", 0) + " (by " + Main.prefs.getString("highscore_EASY_name") + ")";
+        String highScoreMedium = "Highest Score Medium: " + Main.prefs.getInteger("highscore_MEDIUM", 0) + " (by " + Main.prefs.getString("highscore_MEDIUM_name") + ")";
+        String highScoreHard = "Highest Score Hard: " + Main.prefs.getInteger("highscore_HARD", 0) + " (by "+ Main.prefs.getString("highscore_HARD_name") + ")";
         layout.setText(font, highScoreHard);
         font.draw(spriteBatch, highScoreHard, (width - layout.width) / 2, (height / 2));
 

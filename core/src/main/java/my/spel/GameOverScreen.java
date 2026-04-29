@@ -2,10 +2,8 @@ package my.spel;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -14,12 +12,9 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class GameOverScreen implements Screen {
 
@@ -34,15 +29,25 @@ public class GameOverScreen implements Screen {
     Texture gameOverTexture;
     GlyphLayout layout;
     Table table;
+    private float centerX;
+    private float centerY;
     private int score;
     private int highScore;
+    private boolean isNewHighScore;
+    private GameplayScreen.Difficulty difficulty;
 
     Sprite playerSprite;
     BitmapFont font;
 
-    public GameOverScreen(Main parent, int score) {
+    private TextField textField;
+    private String userInput;
+    private Label nameLabel;
+
+    public GameOverScreen(Main parent, int score, GameplayScreen.Difficulty difficulty, boolean isNewHighScore) {
         this.parent = parent;
         this.score = score;
+        this.difficulty = difficulty;
+        this.isNewHighScore = isNewHighScore;
         layout = new GlyphLayout();
         skin = new Skin(Gdx.files.internal(Main.skinPath));
 
@@ -77,6 +82,7 @@ public class GameOverScreen implements Screen {
         menuButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                checkUserInput();
                 dispose();
 //                parent.stopSound(gameOverSound);
                 parent.goToMenu();
@@ -86,15 +92,20 @@ public class GameOverScreen implements Screen {
         table = new Table();
         table.setFillParent(true);
         table.bottom();
-        table.row();
-        table.add(menuButton).padBottom(30);
-        stage.addActor(table);
 
+        if (isNewHighScore) {
+            showUserInputField();
+        }
+
+        table.row();
+        table.add(menuButton).padBottom(30).padTop(30).colspan(2);
+        stage.addActor(table);
     }
 
     @Override
     public void render(float delta) {
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+            checkUserInput();
             dispose();
             parent.newGame(false);
         }
@@ -104,8 +115,8 @@ public class GameOverScreen implements Screen {
         spriteBatch.setProjectionMatrix(stage.getCamera().combined); // match stage viewport
         spriteBatch.begin();
         spriteBatch.draw(gameOverTexture, 0, 0, stage.getViewport().getWorldWidth(), stage.getViewport().getWorldHeight());
-        float centerX = stage.getViewport().getWorldWidth() / 2f;
-        float centerY = stage.getViewport().getWorldHeight() / 2f;
+        centerX = stage.getViewport().getWorldWidth() / 2f;
+        centerY = stage.getViewport().getWorldHeight() / 2f;
 
         String scoreText = "You scored: " + score;
         layout.setText(font, scoreText);
@@ -117,20 +128,62 @@ public class GameOverScreen implements Screen {
         layout.setText(font, highScoreText);
         font.draw(spriteBatch, highScoreText,
             centerX - layout.width / 2,
-            centerY - 90);
+            centerY - 100);
 
         String retryText = "Press space to try again";
         layout.setText(font, retryText);
         font.draw(spriteBatch, retryText,
             centerX - layout.width / 2,
-            centerY - 330);
+            centerY - 200);
+
+        if (isNewHighScore) {
+            getUserTextInput();
+        }
 
         playerSprite.draw(spriteBatch);
 
         spriteBatch.end();
         stage.draw();
+    }
 
+    /**
+     * This method shows text input field on the screen when new high score is scored
+     */
+    public void showUserInputField() {
+        nameLabel = new Label("Enter your name: ", skin);
+        table.add(nameLabel);
+        textField = new TextField("", skin);
+        table.add(textField).width(200).height(50);
+    }
 
+    /**
+     * This method gets user text input when new high score is scored
+     */
+    public void getUserTextInput() {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
+            userInput = textField.getText();
+            saveNameToFile();
+            System.out.println(userInput);
+        }
+    }
+
+    /**
+     * This method saves the user input (player name) to file
+     */
+    public void saveNameToFile() {
+        String difficultyString = difficulty.toString();
+        Main.prefs.putString("highscore_" + difficultyString + "_" + Main.currentPosition + "_name", userInput);
+        Main.prefs.flush();
+    }
+
+    /**
+     * This method checks if player wrote to text field.
+     */
+    public void checkUserInput() {
+        if (userInput == null || userInput.isEmpty()) {
+            userInput = "Stranger";
+            saveNameToFile();
+        }
     }
 
     @Override

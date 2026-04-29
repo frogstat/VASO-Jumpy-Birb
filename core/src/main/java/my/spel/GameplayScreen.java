@@ -260,8 +260,10 @@ public class GameplayScreen implements Screen {
                 parent.stopSound(angelSound);
                 String difficultyString = difficulty.toString();
                 int savedHighScore = Main.prefs.getInteger("highscore_" + difficultyString, 0);
+                boolean isNewHighScore = false;
                 if (scoreThisRound > savedHighScore) {
                     saveHighScore(difficultyString);
+                    isNewHighScore = true;
                 }
 
                 playerSprite.setRotation(theme.equals("theme_hard") ? 180 : 0);
@@ -271,7 +273,7 @@ public class GameplayScreen implements Screen {
                 if (skipGameOver) {
                     parent.newGame(false);
                 } else {
-                    parent.goToGameOver(scoreThisRound);
+                    parent.goToGameOver(scoreThisRound, difficulty, isNewHighScore);
                 }
             }
         }
