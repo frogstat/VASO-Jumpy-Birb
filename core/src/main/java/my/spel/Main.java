@@ -1,5 +1,6 @@
 package my.spel;
 
+import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
@@ -8,7 +9,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 /**
- * {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms.
+ * {@link ApplicationListener} implementation shared by all platforms.
  */
 public class Main extends Game {
 
@@ -33,12 +34,34 @@ public class Main extends Game {
 
     public static Preferences prefs;
 
+    public static int[] easyHighScores = new int[3];
+    public static int[] mediumHighScores = new int[3];
+    public static int[] hardHighScores = new int[3];
+    public static int currentPosition = -1;
+
+
     @Override
     public void create() {
         prefs = Gdx.app.getPreferences("VASO_jumpyBird/gamedata.xml");
+        parseDifficulty();
         music = Gdx.audio.newMusic(Gdx.files.internal("game_assets/menu_music.mp3"));
         playMusic();
         changeScreen(ScreenTypes.MAIN_MENU);
+    }
+
+    private static void parseDifficulty() {
+        for(GameplayScreen.Difficulty difficulty : GameplayScreen.Difficulty.values()){
+            int[] highScoreCurrentDifficulty = switch (difficulty){
+                case EASY -> easyHighScores;
+                case MEDIUM -> mediumHighScores;
+                case HARD -> hardHighScores;
+            };
+
+            for (int i = 0; i < highScoreCurrentDifficulty.length; i++) {
+                highScoreCurrentDifficulty[i] = prefs.getInteger("highscore_" + difficulty.toString() + "_" + (i + 1),0);
+            }
+
+        }
     }
 
     public void changeScreen(ScreenTypes screenType) {
