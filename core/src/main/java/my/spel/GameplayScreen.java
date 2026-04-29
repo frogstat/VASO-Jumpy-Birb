@@ -294,7 +294,11 @@ public class GameplayScreen implements Screen {
 
         for (int i = 0; i < highScoreToCompareTo.length; i++){
             if(scoreThisRound > highScoreToCompareTo[i]){
-                highScoreToCompareTo[i + 1] = highScoreToCompareTo[i];
+                if(i < i + 2){
+                    String dethronedName = Main.prefs.getString("highscore_" + difficulty + "_" + (i + 1) + "_name", "Stranger");
+                    Main.prefs.putString("highscore_" + difficulty + "_" + (i + 2) + "_name", dethronedName);
+                    highScoreToCompareTo[i + 1] = highScoreToCompareTo[i];
+                }
                 highScoreToCompareTo[i] = scoreThisRound;
                 Main.currentPosition = i + 1;
                 isNewHighScore = true;
