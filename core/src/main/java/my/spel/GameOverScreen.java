@@ -150,7 +150,7 @@ public class GameOverScreen implements Screen {
      * This method shows text input field on the screen when new high score is scored
      */
     public void showUserInputField() {
-        nameLabel = new Label("Enter your name: ", skin);
+        nameLabel = new Label("Enter your name and press ENTER to save: ", skin);
         table.add(nameLabel);
         textField = new TextField("", skin);
         table.add(textField).width(200).height(50);
