@@ -5,22 +5,19 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-public class HighScoreScreen implements Screen {
+public class CreditsScreen implements Screen {
+
 
     private final Main parent;
-    private final BitmapFont font;
     private final SpriteBatch spriteBatch;
     private final FitViewport viewport;
     private Stage stage;
@@ -28,11 +25,9 @@ public class HighScoreScreen implements Screen {
     Table table;
     Texture backgroundTexture;
 
-    public HighScoreScreen(Main parent) {
+    public CreditsScreen(Main parent) {
         this.parent = parent;
 
-        font = new BitmapFont(Gdx.files.internal("game_assets/uifont.fnt"));
-        font.getData().setScale(1f);
         spriteBatch = new SpriteBatch();
         viewport = new FitViewport(1920, 1080);
         skin = new Skin(Gdx.files.internal(Main.skinPath));
@@ -44,13 +39,8 @@ public class HighScoreScreen implements Screen {
         Gdx.input.setInputProcessor(stage);
 
         // Background image
-        backgroundTexture = new Texture("game_assets/main_menu/background_menu.png");
-
-        TextButton.TextButtonStyle style = new TextButton.TextButtonStyle(skin.get(TextButton.TextButtonStyle.class));
-        style.font.getData().setScale(0.7f);
-
+        backgroundTexture = new Texture("game_assets/credits.png");
         TextButton menuButton = new TextButton("Title Screen", skin);
-
         menuButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -59,7 +49,6 @@ public class HighScoreScreen implements Screen {
                 parent.goToMenu();
             }
         });
-
         table = new Table();
         table.setFillParent(true);
         table.bottom();
@@ -77,23 +66,7 @@ public class HighScoreScreen implements Screen {
         spriteBatch.begin();
 
         spriteBatch.draw(backgroundTexture, 0, 0, width, height);
-
         stage.addActor(table);
-
-        GlyphLayout layout = new GlyphLayout();
-
-        String highScoreEasy = "Highest Score Easy: " + Main.prefs.getInteger("highscore_EASY", 0) + " (by " + Main.prefs.getString("highscore_EASY_name") + ")";
-        String highScoreMedium = "Highest Score Medium: " + Main.prefs.getInteger("highscore_MEDIUM", 0) + " (by " + Main.prefs.getString("highscore_MEDIUM_name") + ")";
-        String highScoreHard = "Highest Score Hard: " + Main.prefs.getInteger("highscore_HARD", 0) + " (by "+ Main.prefs.getString("highscore_HARD_name") + ")";
-        layout.setText(font, highScoreHard);
-        font.draw(spriteBatch, highScoreHard, (width - layout.width) / 2, (height / 2));
-
-        layout.setText(font, highScoreMedium);
-        font.draw(spriteBatch, highScoreMedium, (width - layout.width) / 2, (height / 2) + 90);
-
-        layout.setText(font, highScoreEasy);
-        font.draw(spriteBatch, highScoreEasy, (width - layout.width) / 2, (height / 2) + 180);
-
         spriteBatch.end();
         stage.draw();
     }
@@ -102,6 +75,7 @@ public class HighScoreScreen implements Screen {
     public void resize(int width, int height) {
         stage.getViewport().update(width, height, true);
     }
+
 
     @Override
     public void pause() {

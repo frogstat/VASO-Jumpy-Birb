@@ -79,9 +79,12 @@ public class GameplayScreen implements Screen {
     private boolean deathTimerIsReset;
     float flameFlipTimer;
 
+
+    float skipDelayTimer;
     BitmapFont font;
 
     public GameplayScreen(Main parent) {
+        Main.currentPosition = -1;
         this.parent = parent;
         random = RandomGenerator.getDefault();
 
@@ -132,6 +135,7 @@ public class GameplayScreen implements Screen {
         flameFlipTimer = 0.05f;
         showFlame = false;
         skipGameOver = false;
+        skipDelayTimer = 0.5f;
     }
 
     public void createNewObstacle() {
@@ -232,6 +236,7 @@ public class GameplayScreen implements Screen {
                 killPlayer();
             }
         } else {
+            skipDelayTimer -= delta;
             if (theme.equals("theme_normal")) {
                 deathTimer -= delta;
                 takePlayerToHeaven(delta);
@@ -251,20 +256,15 @@ public class GameplayScreen implements Screen {
 
             }
 
-            if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+            if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && skipDelayTimer <= 0) {
                 deathTimer = 0;
                 skipGameOver = true;
             }
 
             if (isGameOver(delta)) {
                 parent.stopSound(angelSound);
-                String difficultyString = difficulty.toString();
-                int savedHighScore = Main.prefs.getInteger("highscore_" + difficultyString, 0);
-                boolean isNewHighScore = false;
-                if (scoreThisRound > savedHighScore) {
-                    saveHighScore(difficultyString);
-                    isNewHighScore = true;
-                }
+
+                boolean isNewHighScore = handleHighScore();
 
                 playerSprite.setRotation(theme.equals("theme_hard") ? 180 : 0);
 
@@ -281,9 +281,34 @@ public class GameplayScreen implements Screen {
     }
 
 
-    private void saveHighScore(String difficultyString) {
-        Main.prefs.putInteger("highscore_" + difficultyString, scoreThisRound);
-        Main.prefs.flush();
+    private boolean handleHighScore() {
+        boolean isNewHighScore = false;
+
+        int[] highScoreToCompareTo = switch (difficulty){
+            case EASY -> Main.easyHighScores;
+            case MEDIUM -> Main.mediumHighScores;
+            case HARD -> Main.hardHighScores;
+        };
+
+        int[] originalHighScores = highScoreToCompareTo.clone();
+
+        for (int i = 0; i < highScoreToCompareTo.length; i++){
+            if(scoreThisRound > highScoreToCompareTo[i]){
+                highScoreToCompareTo[i + 1] = highScoreToCompareTo[i];
+                highScoreToCompareTo[i] = scoreThisRound;
+                Main.currentPosition = i + 1;
+                isNewHighScore = true;
+                break;
+            }
+        }
+
+        if (!Arrays.equals(originalHighScores, highScoreToCompareTo)){
+            for (int i = 0; i < highScoreToCompareTo.length; i++) {
+                Main.prefs.putInteger("highscore_" + difficulty.toString() + "_" + (i + 1), highScoreToCompareTo[i]);
+            }
+            Main.prefs.flush();
+        }
+        return isNewHighScore;
     }
 
     private void takePlayerToHeaven(float delta) {
