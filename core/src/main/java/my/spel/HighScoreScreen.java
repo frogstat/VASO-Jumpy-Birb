@@ -32,7 +32,7 @@ public class HighScoreScreen implements Screen {
         this.parent = parent;
 
         font = new BitmapFont(Gdx.files.internal("game_assets/uifont.fnt"));
-        font.getData().setScale(1f);
+        font.getData().setScale(0.5f);
         spriteBatch = new SpriteBatch();
         viewport = new FitViewport(1920, 1080);
         skin = new Skin(Gdx.files.internal(Main.skinPath));
@@ -82,20 +82,60 @@ public class HighScoreScreen implements Screen {
 
         GlyphLayout layout = new GlyphLayout();
 
-        String highScoreEasy = "Highest Score Easy: " + Main.prefs.getInteger("highscore_EASY", 0) + " (by " + Main.prefs.getString("highscore_EASY_name") + ")";
-        String highScoreMedium = "Highest Score Medium: " + Main.prefs.getInteger("highscore_MEDIUM", 0) + " (by " + Main.prefs.getString("highscore_MEDIUM_name") + ")";
-        String highScoreHard = "Highest Score Hard: " + Main.prefs.getInteger("highscore_HARD", 0) + " (by "+ Main.prefs.getString("highscore_HARD_name") + ")";
-        layout.setText(font, highScoreHard);
-        font.draw(spriteBatch, highScoreHard, (width - layout.width) / 2, (height / 2));
+        String placeholder = "Stranger";
 
-        layout.setText(font, highScoreMedium);
-        font.draw(spriteBatch, highScoreMedium, (width - layout.width) / 2, (height / 2) + 90);
+        String highScoreEasy1   = formatHighScore("EASY",   1, "1st", placeholder);
+        String highScoreEasy2   = formatHighScore("EASY",   2, "2nd", placeholder);
+        String highScoreEasy3   = formatHighScore("EASY",   3, "3rd", placeholder);
 
-        layout.setText(font, highScoreEasy);
-        font.draw(spriteBatch, highScoreEasy, (width - layout.width) / 2, (height / 2) + 180);
+        String highScoreMedium1 = formatHighScore("MEDIUM", 1, "1st", placeholder);
+        String highScoreMedium2 = formatHighScore("MEDIUM", 2, "2nd", placeholder);
+        String highScoreMedium3 = formatHighScore("MEDIUM", 3, "3rd", placeholder);
+
+        String highScoreHard1   = formatHighScore("HARD",   1, "1st", placeholder);
+        String highScoreHard2   = formatHighScore("HARD",   2, "2nd", placeholder);
+        String highScoreHard3   = formatHighScore("HARD",   3, "3rd", placeholder);
+
+        layout.setText(font, highScoreHard1);
+        font.draw(spriteBatch, highScoreHard1, width - width / 3, (height / 2) + 180);
+
+        layout.setText(font, highScoreHard2);
+        font.draw(spriteBatch, highScoreHard2, width - width / 3, (height / 2) + 90);
+
+        layout.setText(font, highScoreHard3);
+        font.draw(spriteBatch, highScoreHard3, width - width / 3, (height / 2));
+
+        layout.setText(font, highScoreMedium1);
+        font.draw(spriteBatch, highScoreMedium1, (width - layout.width) / 2, (height / 2) + 180);
+
+        layout.setText(font, highScoreMedium2);
+        font.draw(spriteBatch, highScoreMedium2, (width - layout.width) / 2, (height / 2) + 90);
+
+        layout.setText(font, highScoreMedium3);
+        font.draw(spriteBatch, highScoreMedium3, (width - layout.width) / 2, (height / 2));
+
+        layout.setText(font, highScoreEasy1);
+        font.draw(spriteBatch, highScoreEasy1, width / 8, (height / 2) + 180);
+
+        layout.setText(font, highScoreEasy2);
+        font.draw(spriteBatch, highScoreEasy2, width / 8, (height / 2) + 90);
+
+        layout.setText(font, highScoreEasy3);
+        font.draw(spriteBatch, highScoreEasy3, width / 8, (height / 2));
 
         spriteBatch.end();
         stage.draw();
+    }
+
+    private String formatHighScore(String difficulty, int rank, String placeLabel, String placeholder) {
+        int score = Main.prefs.getInteger("highscore_" + difficulty + "_" + rank, 0);
+
+        if (score == 0) {
+            return placeLabel + ": Empty!";
+        }
+
+        String name = Main.prefs.getString("highscore_" + difficulty + "_" + rank + "_name", placeholder);
+        return placeLabel + ": " + score + " (by " + name + ")";
     }
 
     @Override
