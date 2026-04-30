@@ -66,7 +66,8 @@ public class GameOverScreen implements Screen {
 
         highScore = Main.prefs.getInteger("highscore", 0);
 
-        gameOverTexture = new Texture("game_assets/main_menu/background_menu.png");
+        String theme = difficulty == GameplayScreen.Difficulty.HARD ? "theme_hard" : "theme_normal";
+        gameOverTexture = new Texture("game_assets/" + theme + "/game_over.png");
         gameOverSound = Gdx.audio.newSound(Gdx.files.internal("game_assets/game_over_sound.mp3"));
 //        parent.playSound(gameOverSound);
         spriteBatch = new SpriteBatch();
