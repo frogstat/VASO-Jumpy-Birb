@@ -157,7 +157,7 @@ public class GameplayScreen implements Screen {
         obstacleSpriteTop.setSize(obstacleWidth, obstacleHeight);
         obstacleSpriteTop.setY((obstacleSpriteBottom.getHeight() + obstacleSpriteBottom.getY()) + pipeMargin);
         obstacleSpriteTop.setX(viewport.getWorldWidth() + 10);
-        obstacleSpriteTop.flip(false, true);
+        obstacleSpriteTop.flip(true, true);
 
         obstacles.add(obstacleSpriteTop);
         obstacles.add(obstacleSpriteBottom);
