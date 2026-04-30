@@ -134,9 +134,8 @@ public class GameOverScreen implements Screen {
             highestScoreName = "You";
             messageText = "You beat the high score!";
         }
-        String withString = highestScoreName.isEmpty() ? "" : " with ";
 
-        String highScoreText = "Top player: " + highestScoreName + withString + highestScore;
+        String highScoreText = highestScore > 0 ? "Best player: " + highestScoreName + " - " + highestScore : "";
 
         layout.setText(font, messageText);
         font.draw(spriteBatch, messageText,
