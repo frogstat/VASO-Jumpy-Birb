@@ -30,7 +30,6 @@ public class CreditsScreen implements Screen {
     private Table table;
 
     private Texture backgroundTexture;
-    private Texture previousSpriteTexture;
     private List<Texture> spriteTextures;
     private List<Sprite> playerSprites;
 
@@ -41,6 +40,8 @@ public class CreditsScreen implements Screen {
 
     private float worldWidth;
     private float worldHeight;
+    private boolean spawnSpriteLeft;
+    private int spriteIndex;
 
 
     public CreditsScreen(Main parent) {
@@ -52,15 +53,22 @@ public class CreditsScreen implements Screen {
         spriteTextures = createTextureList();
         spriteBatch = new SpriteBatch();
         viewport = new FitViewport(1920, 1080);
+        worldWidth = viewport.getWorldWidth();
+        worldHeight = viewport.getWorldHeight();
         skin = new Skin(Gdx.files.internal(Main.skinPath));
         gravityConstant = 40;
+        spawnSpriteLeft = true;
+        spriteIndex = 0;
     }
 
     private List<Texture> createTextureList() {
         List<Texture> textures = new ArrayList<>();
+        textures.add(new Texture("game_assets/theme_hard/player_still.png"));
         textures.add(new Texture("game_assets/main_menu/tootsie.png"));
         textures.add(new Texture("game_assets/theme_normal/player_dead.png"));
+        textures.add(new Texture("game_assets/theme_normal/player_still.png"));
         textures.add(new Texture("game_assets/theme_hard/player.png"));
+        textures.add(new Texture("game_assets/theme_hard/player_dead.png"));
         return textures;
     }
 
@@ -87,13 +95,12 @@ public class CreditsScreen implements Screen {
         table.bottom();
         table.row();
         table.add(menuButton).padBottom(30);
+
+        stage.addActor(table);
     }
 
     @Override
     public void render(float delta) {
-        worldWidth = viewport.getWorldWidth();
-        worldHeight = viewport.getWorldHeight();
-
         logic(delta);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act(delta);
@@ -107,7 +114,7 @@ public class CreditsScreen implements Screen {
         for (Ball ball : balls) {
             ball.getSprite().draw(spriteBatch);
         }
-        stage.addActor(table);
+
         spriteBatch.end();
         stage.draw();
     }
@@ -118,7 +125,7 @@ public class CreditsScreen implements Screen {
 
         if (playerSpriteSpawnTimer <= 0) {
             playerSpriteSpawnTimer = 7;
-            spawnNewPlayer();
+            spawnNewSprite();
         }
 
         if (ballSpawnTimer <= 0) {
@@ -161,31 +168,19 @@ public class CreditsScreen implements Screen {
     }
 
     private void spawnNewBall() {
-        float x;
-        float y = worldHeight + worldHeight / 10;
-        boolean goesRight;
+        float y = worldHeight + worldHeight * 0.1f;
 
-        switch (random.nextInt(2)) {
-            case 0 -> {
-                x = 0 - worldWidth / 10;
-                goesRight = true;
-            }
-            case 1 -> {
-                x = worldWidth + worldWidth / 10;
-                goesRight = false;
-            }
-            default -> throw new IllegalStateException("Unexpected value");
-        }
+        boolean goesRight = random.nextBoolean();
+        float x = goesRight ? -worldWidth * 0.1f : worldWidth + worldWidth * 0.1f;
 
         balls.add(new Ball(x, y, goesRight));
     }
 
-    private void spawnNewPlayer() {
-        Texture texture = spriteTextures.get(random.nextInt(spriteTextures.size()));
-
-        if (previousSpriteTexture != null && spriteTextures.size() > 1) {
-            while (previousSpriteTexture.equals(texture))
-                texture = spriteTextures.get(random.nextInt(spriteTextures.size()));
+    private void spawnNewSprite() {
+        Texture texture = spriteTextures.get(spriteIndex);
+        spriteIndex++;
+        if (spriteIndex >= spriteTextures.size()) {
+            spriteIndex = 0;
         }
 
         Sprite newSprite = new Sprite(texture);
@@ -196,27 +191,19 @@ public class CreditsScreen implements Screen {
         newSprite.setY(-200);
         newSprite.setOriginCenter();
 
-        boolean spawnLeft = random.nextBoolean();
-        float minX, maxX;
+        float thirdWidth = worldWidth / 3f;
+        float minX = spawnSpriteLeft ? 0f : worldWidth - thirdWidth;
+        float maxX = spawnSpriteLeft ? thirdWidth - newSprite.getWidth() : worldWidth - newSprite.getWidth();
 
-        if (spawnLeft) {
-            minX = 0;
-            maxX = (worldWidth / 3) - newSprite.getWidth();
-        } else {
-            minX = worldWidth - (worldWidth / 3);
-            maxX = worldWidth - newSprite.getWidth();
-        }
+        spawnSpriteLeft = !spawnSpriteLeft;
+        newSprite.setX(random.nextFloat(minX, maxX));
 
-        float x = random.nextFloat(minX, maxX);
-        newSprite.setX(x);
-
-        previousSpriteTexture = texture;
         playerSprites.add(newSprite);
     }
 
     @Override
     public void resize(int width, int height) {
-        stage.getViewport().update(width, height, true);
+        viewport.update(width, height, true);
     }
 
 
