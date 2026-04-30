@@ -126,6 +126,18 @@ public class GameOverScreen implements Screen {
         centerY = stage.getViewport().getWorldHeight() / 2f;
 
         String messageText = isNewHighScore ? "You made it to the top 3!" : "Game over!";
+
+        int highestScore = Main.prefs.getInteger("highscore_" + GameplayScreen.difficulty + "_1", 0);
+        String highestScoreName = Main.prefs.getString("highscore_" + GameplayScreen.difficulty + "_1_name", "");
+        if (scoreThisRound > highestScore) {
+            highestScore = scoreThisRound;
+            highestScoreName = "You";
+            messageText = "You beat the high score!";
+        }
+        String withString = highestScoreName.isEmpty() ? "" : " with ";
+
+        String highScoreText = "Top player: " + highestScoreName + withString + highestScore;
+
         layout.setText(font, messageText);
         font.draw(spriteBatch, messageText,
             centerX - layout.width / 2,
@@ -137,15 +149,7 @@ public class GameOverScreen implements Screen {
             centerX - layout.width / 2,
             centerY);
 
-        int highestScore = Main.prefs.getInteger("highscore_" + GameplayScreen.difficulty + "_1", 0);
-        String highestScoreName = Main.prefs.getString("highscore_" + GameplayScreen.difficulty + "_1_name", "");
-        if (scoreThisRound > highestScore) {
-            highestScore = scoreThisRound;
-            highestScoreName = "You";
-        }
-        String withString = highestScoreName.isEmpty() ? "" : " with ";
 
-        String highScoreText = "Top player: " + highestScoreName + withString + highestScore;
         layout.setText(font, highScoreText);
         font.draw(spriteBatch, highScoreText,
             centerX - layout.width / 2,
