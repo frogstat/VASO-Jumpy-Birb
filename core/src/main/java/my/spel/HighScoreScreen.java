@@ -99,38 +99,42 @@ public class HighScoreScreen implements Screen {
         String highScoreHard2 = formatHighScore("HARD", 2, "2nd", placeholder);
         String highScoreHard3 = formatHighScore("HARD", 3, "3rd", placeholder);
 
-        layout.setText(font, hardText);
-        font.draw(spriteBatch, hardText, width - width / 3, (height / 2) + 270);
-        layout.setText(font, highScoreHard1);
-        font.draw(spriteBatch, highScoreHard1, width - width / 3, (height / 2) + 180);
-
-        layout.setText(font, highScoreHard2);
-        font.draw(spriteBatch, highScoreHard2, width - width / 3, (height / 2) + 90);
-
-        layout.setText(font, highScoreHard3);
-        font.draw(spriteBatch, highScoreHard3, width - width / 3, (height / 2));
-
-        layout.setText(font, mediumText);
-        font.draw(spriteBatch, mediumText, (width - layout.width) / 2, (height / 2) + 270);
-        layout.setText(font, highScoreMedium1);
-        font.draw(spriteBatch, highScoreMedium1, (width - layout.width) / 2, (height / 2) + 180);
-
-        layout.setText(font, highScoreMedium2);
-        font.draw(spriteBatch, highScoreMedium2, (width - layout.width) / 2, (height / 2) + 90);
-
-        layout.setText(font, highScoreMedium3);
-        font.draw(spriteBatch, highScoreMedium3, (width - layout.width) / 2, (height / 2));
 
         layout.setText(font, easyText);
-        font.draw(spriteBatch, easyText, width / 8, (height / 2) + 270);
+        font.draw(spriteBatch, easyText, width / 20, (height / 2) + 270);
         layout.setText(font, highScoreEasy1);
-        font.draw(spriteBatch, highScoreEasy1, width / 8, (height / 2) + 180);
+        font.draw(spriteBatch, highScoreEasy1, width / 20, (height / 2) + 180);
 
         layout.setText(font, highScoreEasy2);
-        font.draw(spriteBatch, highScoreEasy2, width / 8, (height / 2) + 90);
+        font.draw(spriteBatch, highScoreEasy2, width / 20, (height / 2) + 90);
 
         layout.setText(font, highScoreEasy3);
-        font.draw(spriteBatch, highScoreEasy3, width / 8, (height / 2));
+        font.draw(spriteBatch, highScoreEasy3, width / 20, (height / 2));
+
+        layout.setText(font, mediumText);
+        font.draw(spriteBatch, mediumText, (width / 2) - 200, (height / 2) + 270);
+        layout.setText(font, highScoreMedium1);
+        font.draw(spriteBatch, highScoreMedium1, (width / 2) - 200, (height / 2) + 180);
+
+        layout.setText(font, highScoreMedium2);
+        font.draw(spriteBatch, highScoreMedium2, (width / 2) - 200, (height / 2) + 90);
+
+        layout.setText(font, highScoreMedium3);
+        font.draw(spriteBatch, highScoreMedium3, (width / 2) - 200, (height / 2));
+
+        layout.setText(font, hardText);
+        font.draw(spriteBatch, hardText, width - width / 4, (height / 2) + 270);
+
+        layout.setText(font, highScoreHard1);
+        font.draw(spriteBatch, highScoreHard1, width - width / 4, (height / 2) + 180);
+
+        layout.setText(font, highScoreHard2);
+        font.draw(spriteBatch, highScoreHard2, width - width / 4, (height / 2) + 90);
+
+        layout.setText(font, highScoreHard3);
+        font.draw(spriteBatch, highScoreHard3, width - width / 4, (height / 2));
+
+
 
         spriteBatch.end();
         stage.draw();

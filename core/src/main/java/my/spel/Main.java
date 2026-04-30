@@ -6,7 +6,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 /**
  * {@link ApplicationListener} implementation shared by all platforms.
@@ -37,19 +36,17 @@ public class Main extends Game {
     public static int[] easyHighScores = new int[3];
     public static int[] mediumHighScores = new int[3];
     public static int[] hardHighScores = new int[3];
-    public static int currentPosition = -1;
-
 
     @Override
     public void create() {
         prefs = Gdx.app.getPreferences("VASO_jumpyBird/gamedata.xml");
-        parseDifficulty();
+        parseHighScores();
         music = Gdx.audio.newMusic(Gdx.files.internal("game_assets/menu_music.mp3"));
         playMusic();
         changeScreen(ScreenTypes.MAIN_MENU);
     }
 
-    private static void parseDifficulty() {
+    private static void parseHighScores() {
         for(GameplayScreen.Difficulty difficulty : GameplayScreen.Difficulty.values()){
             int[] highScoreCurrentDifficulty = switch (difficulty){
                 case EASY -> easyHighScores;
@@ -109,8 +106,8 @@ public class Main extends Game {
         changeScreen(ScreenTypes.MAIN_MENU);
     }
 
-    public void goToGameOver(int score, GameplayScreen.Difficulty difficulty, boolean isNewHighScore) {
-        setScreen(new GameOverScreen(this, score, difficulty, isNewHighScore));
+    public void goToGameOver(int score, GameplayScreen.Difficulty difficulty, boolean isNewHighScore, int scoreThisRound, boolean skipGameOver) {
+        setScreen(new GameOverScreen(this, score, difficulty, isNewHighScore, scoreThisRound, skipGameOver));
     }
 
     public void goToCredits(){
