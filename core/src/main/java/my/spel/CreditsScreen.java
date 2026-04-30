@@ -3,6 +3,7 @@ package my.spel;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -45,6 +46,9 @@ public class CreditsScreen implements Screen {
     private int spriteIndex;
     private float ballSpawnDelay;
 
+    private final Sound thunderSound;
+    private float thunderSoundDelay;
+
 
     public CreditsScreen(Main parent) {
         this.parent = parent;
@@ -62,6 +66,9 @@ public class CreditsScreen implements Screen {
         spawnSpriteLeft = true;
         spriteIndex = 0;
         ballSpawnDelay = 8f;
+
+        thunderSound = Gdx.audio.newSound(Gdx.files.internal("game_assets/theme_hard/angel.mp3"));
+        thunderSoundDelay = 0f;
     }
 
     private List<Texture> createTextureList() {
@@ -126,6 +133,10 @@ public class CreditsScreen implements Screen {
     private void input() {
         // Easter egg
         if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
+            if (thunderSoundDelay <= 0) {
+                thunderSoundDelay = 2f;
+                parent.playSound(thunderSound);
+            }
             ballSpawnDelay = ballSpawnDelay == 0 ? 8 : 0;
             if (ballSpawnDelay == 0) {
                 ballSpawnTimer = 0;
@@ -136,6 +147,7 @@ public class CreditsScreen implements Screen {
     private void logic(float delta) {
         playerSpriteSpawnTimer -= delta;
         ballSpawnTimer -= delta;
+        thunderSoundDelay -= delta;
 
         if (playerSpriteSpawnTimer <= 0) {
             playerSpriteSpawnTimer = 7;
