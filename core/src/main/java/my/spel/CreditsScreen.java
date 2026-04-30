@@ -1,6 +1,7 @@
 package my.spel;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -42,6 +43,7 @@ public class CreditsScreen implements Screen {
     private float worldHeight;
     private boolean spawnSpriteLeft;
     private int spriteIndex;
+    private float ballSpawnDelay;
 
 
     public CreditsScreen(Main parent) {
@@ -59,6 +61,7 @@ public class CreditsScreen implements Screen {
         gravityConstant = 40;
         spawnSpriteLeft = true;
         spriteIndex = 0;
+        ballSpawnDelay = 8f;
     }
 
     private List<Texture> createTextureList() {
@@ -102,6 +105,7 @@ public class CreditsScreen implements Screen {
     @Override
     public void render(float delta) {
         logic(delta);
+        input();
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act(delta);
         spriteBatch.setProjectionMatrix(stage.getCamera().combined);
@@ -119,6 +123,16 @@ public class CreditsScreen implements Screen {
         stage.draw();
     }
 
+    private void input() {
+        // Easter egg
+        if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
+            ballSpawnDelay = ballSpawnDelay == 0 ? 8 : 0;
+            if (ballSpawnDelay == 0) {
+                ballSpawnTimer = 0;
+            }
+        }
+    }
+
     private void logic(float delta) {
         playerSpriteSpawnTimer -= delta;
         ballSpawnTimer -= delta;
@@ -129,7 +143,7 @@ public class CreditsScreen implements Screen {
         }
 
         if (ballSpawnTimer <= 0) {
-            ballSpawnTimer = 8;
+            ballSpawnTimer = ballSpawnDelay;
             spawnNewBall();
         }
 
