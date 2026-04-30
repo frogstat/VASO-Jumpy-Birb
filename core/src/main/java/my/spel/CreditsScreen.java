@@ -38,6 +38,8 @@ public class CreditsScreen implements Screen {
         stage = new Stage(viewport);
         Gdx.input.setInputProcessor(stage);
 
+        TextButton.TextButtonStyle style = new TextButton.TextButtonStyle(skin.get(TextButton.TextButtonStyle.class));
+        style.font.getData().setScale(0.7f);
         // Background image
         backgroundTexture = new Texture("game_assets/credits.png");
         TextButton menuButton = new TextButton("Title Screen", skin);

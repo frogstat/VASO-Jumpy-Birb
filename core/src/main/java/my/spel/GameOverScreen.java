@@ -192,7 +192,7 @@ public class GameOverScreen implements Screen {
                 highScoreToCompareTo[i] = scoreThisRound;
 
                 String userName;
-                if (textField.getText() == null || textField.getText().isEmpty()) {
+                if (textField.getText() == null || textField.getText().trim().isEmpty()) {
                     userName = "Stranger";
                 } else {
                     userName = truncate(textField.getText());
