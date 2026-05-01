@@ -45,6 +45,7 @@ public class CreditsScreen implements Screen {
     private boolean spawnSpriteLeft;
     private int spriteIndex;
     private float ballSpawnDelay;
+    private boolean ballSpawnsLeft;
 
     private final Sound thunderSound;
     private float thunderSoundDelay;
@@ -66,6 +67,7 @@ public class CreditsScreen implements Screen {
         spawnSpriteLeft = true;
         spriteIndex = 0;
         ballSpawnDelay = 8f;
+        ballSpawnsLeft = true;
 
         thunderSound = Gdx.audio.newSound(Gdx.files.internal("game_assets/theme_hard/angel.mp3"));
         thunderSoundDelay = 0f;
@@ -195,11 +197,9 @@ public class CreditsScreen implements Screen {
 
     private void spawnNewBall() {
         float y = worldHeight + worldHeight * 0.1f;
-
-        boolean goesRight = random.nextBoolean();
-        float x = goesRight ? -worldWidth * 0.1f : worldWidth + worldWidth * 0.1f;
-
-        balls.add(new Ball(x, y, goesRight));
+        float x = ballSpawnsLeft ? -worldWidth * 0.1f : worldWidth + worldWidth * 0.1f;
+        balls.add(new Ball(x, y, ballSpawnsLeft));
+        ballSpawnsLeft = !ballSpawnsLeft;
     }
 
     private void spawnNewSprite() {
