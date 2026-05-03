@@ -86,6 +86,8 @@ public class GameplayScreen implements Screen {
     private static boolean displayFpsMeter = false;
     private float fpsMeterTimer;
     private float currentFps;
+    private float timePassed;
+    private float framesPassed;
 
     public GameplayScreen(Main parent) {
         this.parent = parent;
@@ -142,6 +144,8 @@ public class GameplayScreen implements Screen {
 
         fpsMeterTimer = 0;
         currentFps = 0;
+        framesPassed = 0;
+        timePassed = 0;
     }
 
     public void createNewObstacle() {
@@ -471,14 +475,17 @@ public class GameplayScreen implements Screen {
     }
 
     private void createFpsMeter(SpriteBatch batch, float delta) {
+        framesPassed++;
+        timePassed += delta;
+
         if (fpsMeterTimer <= 0) {
-            if (delta == 0) {
-                currentFps = -1;
-            } else {
-                currentFps = 1.0f / delta;
-            }
             fpsMeterTimer = 0.5f;
+
+            currentFps = framesPassed / timePassed;
+            framesPassed = 0;
+            timePassed = 0f;
         }
+
         String fps = String.format("FPS: %.0f", currentFps);
         font.setColor(Color.WHITE);
         font.draw(batch, fps, viewport.getWorldWidth() - 37, viewport.getWorldHeight() - 2);
