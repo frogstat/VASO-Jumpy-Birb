@@ -47,8 +47,8 @@ public class CreditsScreen implements Screen {
     private float ballSpawnDelay;
     private boolean ballSpawnsLeft;
 
-    private final Sound thunderSound;
-    private float thunderSoundDelay;
+    private final Sound whoopSound;
+
 
 
     public CreditsScreen(Main parent) {
@@ -69,8 +69,8 @@ public class CreditsScreen implements Screen {
         ballSpawnDelay = 8f;
         ballSpawnsLeft = true;
 
-        thunderSound = Gdx.audio.newSound(Gdx.files.internal("game_assets/theme_normal/whoop.mp3"));
-        thunderSoundDelay = 0f;
+        whoopSound = Gdx.audio.newSound(Gdx.files.internal("game_assets/theme_normal/whoop.mp3"));
+
     }
 
     private List<Texture> createTextureList() {
@@ -135,10 +135,7 @@ public class CreditsScreen implements Screen {
     private void input() {
         // Easter egg
         if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
-            if (thunderSoundDelay <= 0) {
-                thunderSoundDelay = 2f;
-                parent.playSound(thunderSound);
-            }
+            parent.playSound(whoopSound);
             ballSpawnDelay = ballSpawnDelay == 0 ? 8 : 0;
             if (ballSpawnDelay == 0) {
                 ballSpawnTimer = 0;
@@ -149,7 +146,6 @@ public class CreditsScreen implements Screen {
     private void logic(float delta) {
         playerSpriteSpawnTimer -= delta;
         ballSpawnTimer -= delta;
-        thunderSoundDelay -= delta;
 
         if (playerSpriteSpawnTimer <= 0) {
             playerSpriteSpawnTimer = 7;
