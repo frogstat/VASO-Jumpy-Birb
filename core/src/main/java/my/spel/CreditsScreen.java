@@ -69,7 +69,7 @@ public class CreditsScreen implements Screen {
         ballSpawnDelay = 8f;
         ballSpawnsLeft = true;
 
-        thunderSound = Gdx.audio.newSound(Gdx.files.internal("game_assets/theme_hard/angel.mp3"));
+        thunderSound = Gdx.audio.newSound(Gdx.files.internal("game_assets/theme_normal/whoop.mp3"));
         thunderSoundDelay = 0f;
     }
 
