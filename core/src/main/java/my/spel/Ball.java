@@ -33,7 +33,7 @@ public class Ball {
     }
 
     public void applyGravity(float delta, float gravityConstant) {
-        speedY -= gravityConstant;
+        speedY -= gravityConstant * delta;
         sprite.translateY(speedY * delta);
 
 

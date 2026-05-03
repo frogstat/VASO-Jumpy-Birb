@@ -63,7 +63,7 @@ public class CreditsScreen implements Screen {
         worldWidth = viewport.getWorldWidth();
         worldHeight = viewport.getWorldHeight();
         skin = new Skin(Gdx.files.internal(Main.skinPath));
-        gravityConstant = 40;
+        gravityConstant = 6600;
         spawnSpriteLeft = true;
         spriteIndex = 0;
         ballSpawnDelay = 8f;
