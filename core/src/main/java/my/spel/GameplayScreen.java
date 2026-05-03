@@ -83,6 +83,10 @@ public class GameplayScreen implements Screen {
     float skipDelayTimer;
     BitmapFont font;
 
+    private static boolean displayFpsMeter = false;
+    private float fpsMeterTimer;
+    private float currentFps;
+
     public GameplayScreen(Main parent) {
         this.parent = parent;
         random = RandomGenerator.getDefault();
@@ -135,6 +139,9 @@ public class GameplayScreen implements Screen {
         showFlame = false;
         skipGameOver = false;
         skipDelayTimer = 0.5f;
+
+        fpsMeterTimer = 0;
+        currentFps = 0;
     }
 
     public void createNewObstacle() {
@@ -211,6 +218,10 @@ public class GameplayScreen implements Screen {
             }
             playerSpeedY = jumpSpeed;
             parent.playSound(whoopSound);
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
+            displayFpsMeter = !displayFpsMeter;
+            fpsMeterTimer = 0;
         }
     }
 
@@ -442,6 +453,12 @@ public class GameplayScreen implements Screen {
         }
 
         createScoreUi(spriteBatch);
+
+        if (displayFpsMeter) {
+            createFpsMeter(spriteBatch, delta);
+            fpsMeterTimer -= delta;
+        }
+
         spriteBatch.end();
 
 
@@ -451,6 +468,20 @@ public class GameplayScreen implements Screen {
         String score = "Score: " + scoreThisRound;
         font.setColor(Color.WHITE);
         font.draw(batch, score, 2, viewport.getWorldHeight() - 2);
+    }
+
+    private void createFpsMeter(SpriteBatch batch, float delta) {
+        if (fpsMeterTimer <= 0) {
+            if (delta == 0) {
+                currentFps = -1;
+            } else {
+                currentFps = 1.0f / delta;
+            }
+            fpsMeterTimer = 0.5f;
+        }
+        String fps = String.format("FPS: %.0f", currentFps);
+        font.setColor(Color.WHITE);
+        font.draw(batch, fps, viewport.getWorldWidth() - 37, viewport.getWorldHeight() - 2);
     }
 
     @Override
